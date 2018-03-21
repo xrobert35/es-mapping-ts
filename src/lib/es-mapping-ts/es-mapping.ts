@@ -19,4 +19,5 @@ export class EsMapping {
 export interface EsMappingProperty {
   type?: string;
   analyzer?: string;
+  properties?: any;
 }

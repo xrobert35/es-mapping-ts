@@ -1,7 +1,5 @@
-import { EsEntity, EsField } from "../lib/es-mapping-ts";
+import { EsEntity, EsField, EsNestedField } from "../lib/es-mapping-ts";
 import { DogEntity } from "./dog.entity";
-import { EsNestedField } from "../lib/es-mapping-ts/es-nested-field.decorator";
-
 
 @EsEntity({
   index: 'user',
@@ -11,6 +9,7 @@ export class UserEntity {
 
   @EsField({
     type: "text",
+    analyzer : 'whitespace'
   })
   name: string;
 
@@ -21,5 +20,4 @@ export class UserEntity {
 
   @EsNestedField()
   dog: DogEntity;
-  
 }

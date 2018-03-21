@@ -12,12 +12,12 @@ export class EsMappingService {
   static instance: EsMappingService;
   esMappings: Map<String, EsMapping> = new Map();
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Get the singleton instance
    */
-  static getInstance() {
+  static getInstance(): EsMappingService {
     if (!EsMappingService.instance) {
       let esMappingService = new EsMappingService();
       EsMappingService.instance = esMappingService;
@@ -30,7 +30,7 @@ export class EsMappingService {
    * @param args decorator args
    * @param target class
    */
-  addEntity(args: EsEntityArgs, target: any) {
+  addEntity(args: EsEntityArgs, target: any): void {
     const className = target.name;
     let mapping = this.esMappings.get(className);
     if (!mapping) {
@@ -47,7 +47,7 @@ export class EsMappingService {
    * @param target class
    * @param propertyKey the property
    */
-  addNestedField(_args: EsNestedFieldArgs, target: any, propertyKey: any, typeName: string): any {
+  addNestedField(_args: EsNestedFieldArgs, target: any, propertyKey: any, typeName: string): void {
     this.addField({ type: "nested" }, target, propertyKey, this.esMappings.get(typeName).body.properties);
   }
 
@@ -57,7 +57,7 @@ export class EsMappingService {
    * @param target class
    * @param propertyKey the property
    */
-  addField(args: EsFieldArgs, target: any, propertyKey: string | symbol, nestedProperties? : any) {
+  addField(args: EsFieldArgs, target: any, propertyKey: string | symbol, nestedProperties?: any): void {
     const className = target.constructor.name;
     let mapping = this.esMappings.get(className);
     if (!mapping) {
@@ -74,7 +74,7 @@ export class EsMappingService {
       };
 
       if (nestedProperties) {
-        property['properties'] = nestedProperties;
+        property.properties = nestedProperties;
       }
 
       mapping.body.properties[args.name || propertyKey] = property;
@@ -86,14 +86,16 @@ export class EsMappingService {
   /**
    * Alllow you to get the generated mapping list ready to be inserted inside elasticsearch
    */
-  public getMappings() {
+  public getMappings(): Array<EsMapping> {
     return Array.from(this.esMappings.values());
   }
 
   /**
    * Allow you to get all index
    */
-  public getAllIndex() {
-    return lodash.map(Array.from(this.esMappings.values()), ['index']);
+  public getAllIndex(): Array<String> {
+    return lodash.map(Array.from(this.esMappings.values()), (mapping) => {
+      return mapping.index;
+    });
   }
 }

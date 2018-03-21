@@ -2,7 +2,8 @@
   "name": "es-mapping-ts",
   "version": "0.0.1",
   "description": "ES Mapping TypeScript",
-  "main": "dist/main.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "package": "npm run clean && tsc -p tsconfig.package.json",
     "clean": "gulp clean",

@@ -26,11 +26,12 @@ npm install es-mapping-ts --save
 #### @EsNested
 
 Define a basic field of type nested
+
 | Param | Type |  Description |
 | ------ | ------ | ------ |
 | name | string | Allow you to define the name of the property if different from the property name |
 
-/!\ The nested class must be an @EsEntity
+Warning : The nested class must be an @EsEntity
 
 # License
 ----

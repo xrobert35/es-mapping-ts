@@ -10,6 +10,7 @@ import { EsNestedFieldArgs } from "./es-nested-field.decorator";
 export class EsMappingService {
 
   static instance: EsMappingService;
+
   esMappings: Map<String, EsMapping> = new Map();
 
   constructor() { }
@@ -88,6 +89,20 @@ export class EsMappingService {
    */
   public getMappings(): Array<EsMapping> {
     return Array.from(this.esMappings.values());
+  }
+
+  /**
+   * Allow you to get the generate mapping map
+   */
+  public getMappingsMap() {
+    return this.esMappings;
+  }
+
+  /**
+   * Alllow you to get the generated mapping list ready to be inserted inside elasticsearch
+   */
+  public getMappingForClass(className: String): EsMapping {
+    return this.esMappings.get(className);
   }
 
   /**

@@ -99,10 +99,21 @@ export class EsMappingService {
   }
 
   /**
-   * Alllow you to get the generated mapping list ready to be inserted inside elasticsearch
+   * Alllow you to get the generated mapping ready to be inserted inside elasticsearch
+   * for a class name
    */
   public getMappingForClass(className: String): EsMapping {
     return this.esMappings.get(className);
+  }
+
+  /**
+   * Alllow you to get the generated mapping  ready to be inserted inside elasticsearch
+   * for an index name
+   */
+  public getMappingForIndex(indexName: String): EsMapping {
+    return lodash.find(this.esMappings.values, (esMapping) => {
+      return esMapping.index === indexName;
+    });
   }
 
   /**

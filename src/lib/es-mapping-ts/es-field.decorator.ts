@@ -10,6 +10,8 @@ export class EsFieldArgs {
   name?: string;
   /** Analyzer type */
   analyzer?: string;
+  /** Additionnal ES fields **/
+  fields?: any;
 }
 
 /**

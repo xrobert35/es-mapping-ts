@@ -8,7 +8,12 @@ import { EsEntity, EsField } from "../lib/es-mapping-ts";
 export class DogEntity {
 
   @EsField({
-    type: "text"
+    type: "text",
+    fields : {
+      raw: {
+          type:  "keyword"
+      }
+    }
   })
   name: string;
 

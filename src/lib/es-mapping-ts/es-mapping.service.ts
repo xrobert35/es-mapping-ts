@@ -42,6 +42,7 @@ export class EsMappingService {
     }
     mapping.index = args.index;
     mapping.type = args.type;
+    mapping.readonly = args.readonly;
   }
 
   /**
@@ -78,6 +79,10 @@ export class EsMappingService {
 
       if (nestedProperties) {
         property.properties = nestedProperties;
+      }
+
+      if(args.fields){
+        property.fields = args.fields;
       }
 
       mapping.body.properties[args.name || propertyKey] = property;

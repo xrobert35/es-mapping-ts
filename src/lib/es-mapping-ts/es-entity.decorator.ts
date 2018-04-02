@@ -8,6 +8,8 @@ export class EsEntityArgs {
   index: string;
   /** Type of the index */
   type: string;
+  /** create mapping or not **/
+  readonly?: boolean;
 }
 
 /**

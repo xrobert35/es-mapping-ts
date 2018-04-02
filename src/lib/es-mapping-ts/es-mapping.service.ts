@@ -149,17 +149,19 @@ export class EsMappingService {
     const mappings = EsMappingService.getInstance().getMappings();
 
     await bluebird.each(mappings, async (mapping) => {
-      const index = mapping.index;
+      if(!mapping.readonly) {
+        const index = mapping.index;
 
-      const indexExist = await esclient.indices.exists({ index: index });
-      if (!indexExist) {
-        //create index
-        await esclient.indices.create({ index: mapping.index });
-        //create mapping
-        await esclient.indices.putMapping(mapping);
-      } else {
-        //update mapping
-        await esclient.indices.putMapping(mapping);
+        const indexExist = await esclient.indices.exists({index: index});
+        if (!indexExist) {
+          //create index
+          await esclient.indices.create({index: mapping.index});
+          //create mapping
+          await esclient.indices.putMapping(mapping);
+        } else {
+          //update mapping
+          await esclient.indices.putMapping(mapping);
+        }
       }
     });
   }

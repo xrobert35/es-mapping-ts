@@ -42,7 +42,7 @@ export class EsMappingService {
     }
     mapping.index = args.index;
     mapping.type = args.type;
-    mapping.readonly = args.readonly;
+    mapping.readonly = (args.readonly === true);
   }
 
   /**
@@ -151,6 +151,8 @@ export class EsMappingService {
     await bluebird.each(mappings, async (mapping) => {
       if(!mapping.readonly) {
         const index = mapping.index;
+        // Delete readonly for ES compatibility
+        delete mapping.readonly;
 
         const indexExist = await esclient.indices.exists({index: index});
         if (!indexExist) {

@@ -116,6 +116,16 @@ export class EsMappingService {
     });
   }
 
+    /**
+   * Alllow you to get the generated mapping  eady to be inserted inside elasticsearch
+   * for an type
+   */
+  public getMappingForType(type: String): EsMapping {
+    return lodash.find(this.esMappings.values, (esMapping) => {
+      return esMapping.type === type;
+    });
+  }
+
   /**
    * Allow you to get all index
    */

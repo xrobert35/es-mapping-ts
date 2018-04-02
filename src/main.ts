@@ -4,4 +4,4 @@ import './example/dog.entity';
 import { EsMappingService } from './lib/es-mapping-ts';
 
 const mappings = EsMappingService.getInstance().getMappings();
-console.log(mappings);
+console.log(JSON.stringify(mappings, null, 2));

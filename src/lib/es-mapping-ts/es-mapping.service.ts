@@ -1,4 +1,4 @@
-import { EsMapping, EsMappingProperty } from "./es-mapping";
+import {EsMapping, EsMappingProperty, InternalEsMapping, InternalEsMappingProperty} from "./es-mapping";
 import { EsFieldArgs } from "./es-field.decorator";
 import { EsEntityArgs } from "./es-entity.decorator";
 import * as lodash from 'lodash';
@@ -13,7 +13,7 @@ export class EsMappingService {
 
   static instance: EsMappingService;
 
-  esMappings: Map<String, EsMapping> = new Map();
+  esMappings: Map<String, InternalEsMapping> = new Map();
 
   constructor() { }
 
@@ -37,12 +37,14 @@ export class EsMappingService {
     const className = target.name;
     let mapping = this.esMappings.get(className);
     if (!mapping) {
-      mapping = new EsMapping();
+      mapping = new InternalEsMapping();
       this.esMappings.set(className, mapping);
     }
     mapping.index = args.index;
     mapping.type = args.type;
     mapping.readonly = (args.readonly === true);
+
+    mapping.mergeEsMapping();
   }
 
   /**
@@ -65,8 +67,9 @@ export class EsMappingService {
     const className = target.constructor.name;
     let mapping = this.esMappings.get(className);
     if (!mapping) {
-      mapping = new EsMapping();
+      mapping = new InternalEsMapping();
       this.esMappings.set(className, mapping);
+      mapping.mergeEsMapping();
     }
 
     let property: EsMappingProperty = {};
@@ -85,17 +88,36 @@ export class EsMappingService {
         property.fields = args.fields;
       }
 
-      mapping.body.properties[args.name || propertyKey] = property;
+      let internalProperty: InternalEsMappingProperty = {
+        propertyMapping : property
+      };
+
+      // TODO Gérer les propriétés additionnelles
+
+      let propertyName = args.name || propertyKey;
+      mapping.addProperty(propertyName,internalProperty);
     } else {
-      mapping.body.properties[propertyKey] = {};
+      let internalProperty: InternalEsMappingProperty = {
+        propertyMapping : {}
+      };
+      mapping.addProperty(propertyKey,internalProperty);
     }
   }
 
   /**
    * Alllow you to get the generated mapping list ready to be inserted inside elasticsearch
    */
-  public getMappings(): Array<EsMapping> {
+  public getMappings(): Array<InternalEsMapping> {
     return Array.from(this.esMappings.values());
+  }
+
+  /**
+   * Allow you to get all index
+   */
+  public getEsMappings(): Array<EsMapping> {
+    return lodash.map(Array.from(this.esMappings.values()), (mapping) => {
+      return mapping.esmapping;
+    });
   }
 
   /**
@@ -159,10 +181,10 @@ export class EsMappingService {
           //create index
           await esclient.indices.create({index: mapping.index});
           //create mapping
-          await esclient.indices.putMapping(mapping);
+          await esclient.indices.putMapping(mapping.esmapping);
         } else {
           //update mapping
-          await esclient.indices.putMapping(mapping);
+          await esclient.indices.putMapping(mapping.esmapping);
         }
       }
     });

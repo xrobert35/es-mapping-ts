@@ -16,14 +16,12 @@ export class EsMapping {
 /**
  * Internal mapping to handle specific parameter
  */
-export class InternalEsMapping extends EsMapping {
+export class InternalEsMapping {
+  index: string;
+  type: string;
   readonly: boolean;
   esmapping: EsMapping;
   properties: Map<string | symbol, InternalEsMappingProperty> = new Map();
-
-  constructor() {
-    super();
-  }
 
   mergeEsMapping(): void {
     if (!this.esmapping) {

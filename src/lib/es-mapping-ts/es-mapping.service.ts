@@ -54,7 +54,7 @@ export class EsMappingService {
    * @param propertyKey the property
    */
   addNestedField(_args: EsNestedFieldArgs, target: any, propertyKey: any, typeName: string): void {
-    this.addField({ type: "nested" }, target, propertyKey, this.esMappings.get(typeName).body.properties);
+    this.addField({ type: "nested" }, target, propertyKey, this.esMappings.get(typeName).esmapping.body.properties);
   }
 
   /**
@@ -132,7 +132,7 @@ export class EsMappingService {
    * for a class name
    */
   public getMappingForClass(className: String): EsMapping {
-    return this.esMappings.get(className);
+    return this.esMappings.get(className).esmapping;
   }
 
   /**

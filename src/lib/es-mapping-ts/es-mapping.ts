@@ -19,7 +19,7 @@ export class EsMapping {
 export class InternalEsMapping extends EsMapping {
   readonly: boolean;
   esmapping: EsMapping;
-  properties: InternalEsMappingProperty[] = new Array();
+  properties: Map<string | symbol, InternalEsMappingProperty> = new Map();
 
   constructor() {
     super();
@@ -34,7 +34,7 @@ export class InternalEsMapping extends EsMapping {
   }
 
   addProperty(name: string | symbol, mapping: InternalEsMappingProperty): void {
-    this.properties[name] = mapping;
+    this.properties.set(name, mapping);
     this.esmapping.body.properties[name] = mapping.propertyMapping;
   }
 }

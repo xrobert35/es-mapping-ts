@@ -2,6 +2,8 @@ import { EsMapping, EsMappingProperty } from "./es-mapping";
 import { EsFieldArgs } from "./es-field.decorator";
 import { EsEntityArgs } from "./es-entity.decorator";
 import * as lodash from 'lodash';
+import * as bluebird from 'bluebird';
+import { Client } from 'elasticsearch';
 import { EsNestedFieldArgs } from "./es-nested-field.decorator";
 
 /**
@@ -116,10 +118,10 @@ export class EsMappingService {
     });
   }
 
-    /**
-   * Alllow you to get the generated mapping  eady to be inserted inside elasticsearch
-   * for an type
-   */
+  /**
+ * Alllow you to get the generated mapping  eady to be inserted inside elasticsearch
+ * for an type
+ */
   public getMappingForType(type: String): EsMapping {
     return lodash.find(this.esMappings.values, (esMapping) => {
       return esMapping.type === type;
@@ -132,6 +134,28 @@ export class EsMappingService {
   public getAllIndex(): Array<String> {
     return lodash.map(Array.from(this.esMappings.values()), (mapping) => {
       return mapping.index;
+    });
+  }
+
+  /**
+   * Allow to insert/update mapping into elasticsearch
+   */
+  public async uploadMappings(esclient : Client) {
+    const mappings = EsMappingService.getInstance().getMappings();
+
+    await bluebird.each(mappings, async (mapping) => {
+      const index = mapping.index;
+
+      const indexExist = await esclient.indices.exists({ index: index });
+      if (!indexExist) {
+        //create index
+        await esclient.indices.create({ index: mapping.index });
+        //create mapping
+        await esclient.indices.putMapping(mapping);
+      } else {
+        //update mapping
+        await esclient.indices.putMapping(mapping);
+      }
     });
   }
 }

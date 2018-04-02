@@ -11,20 +11,23 @@
     "dist": "gulp build"
   },
   "dependencies": {
+    "bluebird": "^3.5.1",
+    "elasticsearch": "^14.2.2",
     "lodash": "^4.17.5",
     "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.20",
     "@types/lodash": "^4.14.105",
     "cross-env": "^5.1.3",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-typescript": "^3.2.3",
     "mocha": "^5.0.1",
     "nyc": "^11.4.1",
     "ts-node": "^3.3.0",
-    "typescript": "^2.6.2",
-    "gulp-clean": "^0.3.2",
-    "gulp": "^3.9.1",
-    "gulp-sourcemaps": "^2.6.1",
-    "gulp-typescript": "^3.2.3"
+    "typescript": "^2.6.2"
   },
   "keywords": [
     "inversify",

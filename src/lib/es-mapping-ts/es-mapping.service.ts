@@ -1,10 +1,9 @@
-import {EsMapping, EsMappingProperty, InternalEsMapping, InternalEsMappingProperty} from "./es-mapping";
+import { EsMapping, EsMappingProperty, InternalEsMapping, InternalEsMappingProperty } from "./es-mapping";
 import { EsFieldArgs } from "./es-field.decorator";
 import { EsEntityArgs } from "./es-entity.decorator";
 import * as lodash from 'lodash';
 import * as bluebird from 'bluebird';
 import { Client } from 'elasticsearch';
-import { EsNestedFieldArgs } from "./es-nested-field.decorator";
 
 /**
  * Service used to manage mapping loading and share it
@@ -40,21 +39,12 @@ export class EsMappingService {
       mapping = new InternalEsMapping();
       this.esMappings.set(className, mapping);
     }
-    mapping.index = args.index;
-    mapping.type = args.type;
-    mapping.readonly = (args.readonly === true);
-
+    if (args) {
+      mapping.esmapping.index = args.index;
+      mapping.esmapping.type = args.type;
+      mapping.readonly = (args.readonly === true);
+    }
     mapping.mergeEsMapping();
-  }
-
-  /**
-   * Add the nested field in the mapping
-   * @param _args decorator args
-   * @param target class
-   * @param propertyKey the property
-   */
-  addNestedField(_args: EsNestedFieldArgs, target: any, propertyKey: any, typeName: string): void {
-    this.addField({ type: "nested" }, target, propertyKey, this.esMappings.get(typeName).body.properties);
   }
 
   /**
@@ -63,7 +53,7 @@ export class EsMappingService {
    * @param target class
    * @param propertyKey the property
    */
-  addField(args: EsFieldArgs, target: any, propertyKey: string | symbol, nestedProperties?: any): void {
+  addField(args: EsFieldArgs, target: any, propertyKey: string | symbol, propertyType?: any): void {
     const className = target.constructor.name;
     let mapping = this.esMappings.get(className);
     if (!mapping) {
@@ -72,35 +62,28 @@ export class EsMappingService {
       mapping.mergeEsMapping();
     }
 
-    let property: EsMappingProperty = {};
+    let properties: EsMappingProperty = {};
     if (args) {
-
-      property = {
-        type: args.type,
-        analyzer: args.analyzer
-      };
-
-      if (nestedProperties) {
-        property.properties = nestedProperties;
-      }
-
-      if(args.fields){
-        property.fields = args.fields;
+      if (args.type === 'nested') {
+        properties.type = 'nested';
+        properties.properties = this.esMappings.get(args.nestedType.name).esmapping.body.properties;
+      } else if (args.type === 'object') {
+        properties.properties = this.esMappings.get(propertyType.name).esmapping.body.properties;
+      } else {
+        properties = args;
       }
 
       let internalProperty: InternalEsMappingProperty = {
-        propertyMapping : property
+        propertyMapping: properties
       };
-
-      // TODO Gérer les propriétés additionnelles
 
       let propertyName = args.name || propertyKey;
-      mapping.addProperty(propertyName,internalProperty);
+      mapping.addProperty(propertyName, internalProperty);
     } else {
       let internalProperty: InternalEsMappingProperty = {
-        propertyMapping : {}
+        propertyMapping: {}
       };
-      mapping.addProperty(propertyKey,internalProperty);
+      mapping.addProperty(propertyKey, internalProperty);
     }
   }
 
@@ -132,7 +115,7 @@ export class EsMappingService {
    * for a class name
    */
   public getMappingForClass(className: String): EsMapping {
-    return this.esMappings.get(className);
+    return this.esMappings.get(className).esmapping;
   }
 
   /**
@@ -140,9 +123,9 @@ export class EsMappingService {
    * for an index name
    */
   public getMappingForIndex(indexName: String): EsMapping {
-    return lodash.find(this.esMappings.values, (esMapping) => {
-      return esMapping.index === indexName;
-    });
+    return lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
+      return internalEsMapping.esmapping.index === indexName;
+    }).esmapping;
   }
 
   /**
@@ -150,9 +133,9 @@ export class EsMappingService {
  * for an type
  */
   public getMappingForType(type: String): EsMapping {
-    return lodash.find(this.esMappings.values, (esMapping) => {
-      return esMapping.type === type;
-    });
+    return lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
+      return internalEsMapping.esmapping.type === type;
+    }).esmapping;
   }
 
   /**
@@ -160,31 +143,33 @@ export class EsMappingService {
    */
   public getAllIndex(): Array<String> {
     return lodash.map(Array.from(this.esMappings.values()), (mapping) => {
-      return mapping.index;
+      return mapping.esmapping.index;
     });
   }
 
   /**
    * Allow to insert/update mapping into elasticsearch
    */
-  public async uploadMappings(esclient : Client) {
+  public async uploadMappings(esclient: Client) {
     const mappings = EsMappingService.getInstance().getMappings();
 
-    await bluebird.each(mappings, async (mapping) => {
-      if(!mapping.readonly) {
-        const index = mapping.index;
-        // Delete readonly for ES compatibility
-        delete mapping.readonly;
+    await bluebird.each(mappings, async (internalMapping) => {
+      if (!internalMapping.readonly) {
+        const esMapping = internalMapping.esmapping;
+        const index = internalMapping.esmapping.index;
 
-        const indexExist = await esclient.indices.exists({index: index});
+        // Delete readonly for ES compatibility
+        delete internalMapping.readonly;
+
+        const indexExist = await esclient.indices.exists({ index: index });
         if (!indexExist) {
           //create index
-          await esclient.indices.create({index: mapping.index});
+          await esclient.indices.create({ index: esMapping.index });
           //create mapping
-          await esclient.indices.putMapping(mapping.esmapping);
+          await esclient.indices.putMapping(esMapping);
         } else {
           //update mapping
-          await esclient.indices.putMapping(mapping.esmapping);
+          await esclient.indices.putMapping(esMapping);
         }
       }
     });

@@ -16,21 +16,21 @@ export class EsMapping {
 /**
  * Internal mapping to handle specific parameter
  */
-export class InternalEsMapping extends EsMapping {
+export class InternalEsMapping {
   readonly: boolean;
   esmapping: EsMapping;
   properties: Map<string | symbol, InternalEsMappingProperty> = new Map();
 
   constructor() {
-    super();
+    this.esmapping = new EsMapping();
   }
 
   mergeEsMapping(): void {
     if (!this.esmapping) {
       this.esmapping = new EsMapping();
     }
-    this.esmapping.index = this.index;
-    this.esmapping.type = this.type;
+    this.esmapping.index = this.esmapping.index;
+    this.esmapping.type = this.esmapping.type;
   }
 
   addProperty(name: string | symbol, mapping: InternalEsMappingProperty): void {

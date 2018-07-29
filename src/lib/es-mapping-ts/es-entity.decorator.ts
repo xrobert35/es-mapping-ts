@@ -7,7 +7,7 @@ export class EsEntityArgs {
   /** Name of the index */
   index: string;
   /** Type of the index */
-  type: string;
+  type?: string;
   /** create mapping or not **/
   readonly?: boolean;
 }
@@ -16,7 +16,7 @@ export class EsEntityArgs {
  * @EsEntity decorator : registrer the entity in the mapping through the EsMappingService
  * @param args decorator annotation
  */
-export function EsEntity(args: EsEntityArgs): ClassDecorator {
+export function EsEntity(args?: EsEntityArgs): ClassDecorator {
   return function (target: any) {
     EsMappingService.getInstance().addEntity(args, target);
   }

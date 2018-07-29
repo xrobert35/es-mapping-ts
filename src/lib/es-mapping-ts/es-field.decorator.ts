@@ -1,4 +1,5 @@
 import { EsMappingService } from "./es-mapping.service";
+import 'reflect-metadata';
 
 /**
  * Argument for a simple elasticsearch field
@@ -12,6 +13,20 @@ export class EsFieldArgs {
   analyzer?: string;
   /** Additionnal ES fields **/
   fields?: any;
+  /** Format */
+  format?: any;
+  /** Enabled */
+  enabled?: boolean;
+  /** Define the null value */
+  null_value?: any;
+  /** copy into a group field */
+  copy_to?: string;
+  /** Additional properties */
+  [x: string]: any;
+  /** Relations for join datatype */
+  relations?: any;
+  /** Nested type for nested datatype */
+  nestedType? : any
 }
 
 /**
@@ -20,6 +35,21 @@ export class EsFieldArgs {
  */
 export function EsField(args: EsFieldArgs): PropertyDecorator {
   return function (target: any, propertyKey: string | symbol) {
-    EsMappingService.getInstance().addField(args, target, propertyKey);
+
+    const propertyType = Reflect.getMetadata("design:type", target, propertyKey);
+    if (args.type === 'join' && !args.relations) {
+      throw new Error(`es-mapping-error no relations defined for join datatype : ${target.constructor.name}:${<string>propertyKey}`);
+    }
+
+    if (args.type === 'nested') {
+      if (!args.nestedType) {
+        throw new Error(`es-mapping-error no nestedType defined for nested datatype : ${target.constructor.name}:${<string>propertyKey}`);
+      }
+      if (propertyType.name !== 'Array') {
+        throw new Error(`es-mapping-error type of a nested field my be an array : ${target.constructor.name}:${<string>propertyKey}`);
+      }
+    }
+
+    EsMappingService.getInstance().addField(args, target, propertyKey, propertyType);
   };
 }

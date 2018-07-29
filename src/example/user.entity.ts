@@ -1,5 +1,6 @@
-import { EsEntity, EsField, EsNestedField } from "../lib/es-mapping-ts";
-import { DogEntity } from "./dog.entity";
+import { EsEntity, EsField } from "../lib/es-mapping-ts";
+import { Budget } from "./budget.entity";
+import { MasterEntity } from "./master.entity";
 
 @EsEntity({
   index: 'user',
@@ -18,6 +19,20 @@ export class UserEntity {
   })
   age: number;
 
-  @EsNestedField()
-  dog: DogEntity;
+  @EsField({
+    type: 'join',
+    relations: { "parent" : "child"}
+  })
+  children: Array<UserEntity>;
+
+  @EsField({
+    type: 'object'
+  })
+  dog: Budget;
+
+  @EsField({
+    type: 'nested',
+    nestedType : MasterEntity
+  })
+  master: Array<MasterEntity>;
 }

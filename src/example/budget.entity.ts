@@ -1,16 +1,13 @@
 import { EsEntity, EsField } from "../lib/es-mapping-ts";
 
-
-@EsEntity({
-  index: 'dog'
-})
-export class DogEntity {
+@EsEntity()
+export class Budget {
 
   @EsField({
     type: "text",
-    fields : {
+    fields: {
       raw: {
-          type:  "keyword"
+        type: "keyword"
       }
     }
   })
@@ -19,6 +16,11 @@ export class DogEntity {
   @EsField({
     type: "integer"
   })
-  age: number;
+  montant: number;
+
+  @EsField({
+    type: "raw"
+  })
+  master: Array<Budget>
 
 }

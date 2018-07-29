@@ -9,7 +9,6 @@ export class EsMapping {
   body: { properties: any };
 
   constructor() {
-    this.body = { properties: {} };
   }
 }
 
@@ -17,6 +16,8 @@ export class EsMapping {
  * Internal mapping to handle specific parameter
  */
 export class InternalEsMapping {
+  index: string;
+  type: string;
   readonly: boolean;
   esmapping: EsMapping;
   properties: Map<string | symbol, InternalEsMappingProperty> = new Map();

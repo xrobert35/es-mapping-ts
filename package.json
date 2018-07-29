@@ -1,6 +1,6 @@
 {
   "name": "es-mapping-ts",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "ES Mapping TypeScript",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

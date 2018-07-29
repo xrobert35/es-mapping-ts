@@ -12,8 +12,9 @@ npm install es-mapping-ts --save
 
 ### Create the mapping 
 ```typescript
-import { EsEntity, EsField, EsNestedField } from "es-mapping-ts";
-import { DogEntity } from "./dog.entity";
+import { EsEntity, EsField } from "../lib/es-mapping-ts";
+import { Budget } from "./budget.entity";
+import { MasterEntity } from "./master.entity";
 
 @EsEntity({
   index: 'user',
@@ -32,12 +33,42 @@ export class UserEntity {
   })
   age: number;
 
-  @EsNestedField()
-  dog: DogEntity;
+  @EsField({
+    type: 'join',
+    relations: { "parent" : "child"}
+  })
+  children: Array<UserEntity>;
+
+  @EsField({
+    type: 'object'
+  })
+  dog: Budget;
+
+  @EsField({
+    type: 'nested',
+    nestedType : MasterEntity
+  })
+  master: Array<MasterEntity>;
 }
 ```
 
 ### Get the generated mappings
+
+#### Simply call the "uploadMappings"  function
+```typescript
+import { EsMappingService } from 'es-mapping-ts';
+import { Client } from 'elasticsearch';
+
+const esClient = new Client();
+
+// Upload the mapping
+const mappings = EsMappingService.getInstance(esClient).uploadMappings();
+```
+
+only none readonly entity will be uploaded
+
+
+#### or do it yourself
 
 ```typescript
 import { EsMappingService } from 'es-mapping-ts';
@@ -61,6 +92,7 @@ Bluebird.each(mappings, async (mapping) => {
 | ------ | ------ | ------ |
 | index | string | Allow you to define the index name |
 | type | string | Allow you to define the index type |
+| readonly | boolean | Define if the mapping must be uploaded when using uploadMappings function |
 
 #### @EsField
 | Param | Type |  Description |
@@ -68,16 +100,15 @@ Bluebird.each(mappings, async (mapping) => {
 | type | string | Allow you to define the type of the index |
 | name | string | Allow you to define the name of the property if different from the property name |
 | analyzer | string | Allow you to define the elasticsearch analyzer |
+| fields | string | Allow you to define the elasticsearch fields |
+| format | string | Allow you to define the format (ie for date field) |
+| enabled | string | Allow you to enable ou disable the field |
+| null_value | string | Allow you to define the null value of the field |
+| copy_to | string | Allow you to copy the field value into a group field for _search |
+| relations | string | Define the releation for a join type |
+| nestedType | string | Class used to get the properties of the nested type |
 
-#### @EsNested
-
-Define a basic field of type nested
-
-| Param | Type |  Description |
-| ------ | ------ | ------ |
-| name | string | Allow you to define the name of the property if different from the property name |
-
-Warning : The nested class must be an @EsEntity
+Additional properties are allowed, allowing you to manage other elasticsearch properties
 
 # License
 ----

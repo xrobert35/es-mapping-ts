@@ -21,12 +21,12 @@ export class EsFieldArgs {
   null_value?: any;
   /** copy into a group field */
   copy_to?: string;
-  /** Additional properties */
-  [x: string]: any;
   /** Relations for join datatype */
   relations?: any;
   /** Nested type for nested datatype */
-  nestedType? : any
+  nestedType?: any
+  /** Additional properties */
+  [x: string]: any;
 }
 
 /**

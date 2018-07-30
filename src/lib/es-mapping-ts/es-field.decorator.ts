@@ -44,11 +44,11 @@ export function EsField(args: EsFieldArgs): PropertyDecorator {
     }
 
     if (args.type === 'nested') {
-      if (!args.fieldClass) {
-        console.warn(`es-mapping-warning no fieldClass defined for nested datatype : ${target.constructor.name}:${<string>propertyKey}`)
-      }
       if (propertyType.name !== 'Array') {
         throw new Error(`es-mapping-error type of a nested field must be an array : ${target.constructor.name}:${<string>propertyKey}`);
+      }
+      if (!args.fieldClass) {
+        console.warn(`es-mapping-warning no fieldClass defined for nested datatype : ${target.constructor.name}:${<string>propertyKey}`)
       }
     }
 

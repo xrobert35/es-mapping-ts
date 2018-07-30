@@ -43,11 +43,17 @@ export class UserEntity {
   @EsField({
     type: 'object'
   })
-  dog: BudgetEntity;
+  budget: BudgetEntity;
+
+  @EsField({
+    type: 'object',
+    fieldClass : BudgetEntity
+  })
+  budgets: Array<BudgetEntity>;
 
   @EsField({
     type: 'nested',
-    nestedType : MasterEntity
+    fieldClass : MasterEntity
   })
   master: Array<MasterEntity>;
 }
@@ -102,14 +108,15 @@ Bluebird.each(mappings, async (mapping) => {
 | ------ | ------ | ------ |
 | type | string | Allow you to define the type of the index |
 | name | string | Allow you to define the name of the property if different from the property name |
+| dynamic | boolean | Allow you to define if the field can accept additional properties |
 | analyzer | string | Allow you to define the elasticsearch analyzer |
 | fields | string | Allow you to define the elasticsearch fields |
 | format | string | Allow you to define the format (ie for date field) |
-| enabled | string | Allow you to enable ou disable the field |
+| enabled | boolean | Allow you to enable ou disable the field |
 | null_value | string | Allow you to define the null value of the field |
 | copy_to | string | Allow you to copy the field value into a group field for _search |
 | relations | string | Define the releation for a join type |
-| nestedType | string | Class used to get the properties of the nested type |
+| fieldClass | string | Class used to get the properties of the nested or object array type |
 
 Additional properties are allowed, allowing you to manage other elasticsearch properties
 

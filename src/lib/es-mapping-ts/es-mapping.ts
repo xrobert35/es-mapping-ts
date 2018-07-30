@@ -9,6 +9,7 @@ export class EsMapping {
   body: { properties: any };
 
   constructor() {
+    this.body = { properties: [] };
   }
 }
 

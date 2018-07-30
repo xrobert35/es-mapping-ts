@@ -13,7 +13,8 @@ npm install es-mapping-ts --save
 ### Create the mapping 
 ```typescript
 import { EsEntity, EsField } from "../lib/es-mapping-ts";
-import { Budget } from "./budget.entity";
+import { BudgetEntity } from "./budget.entity";
+import { UsertEntity } from "./user.entity";
 import { MasterEntity } from "./master.entity";
 
 @EsEntity({
@@ -42,7 +43,7 @@ export class UserEntity {
   @EsField({
     type: 'object'
   })
-  dog: Budget;
+  dog: BudgetEntity;
 
   @EsField({
     type: 'nested',
@@ -51,6 +52,8 @@ export class UserEntity {
   master: Array<MasterEntity>;
 }
 ```
+
+* MasterEntity,  UserEntity and BudgetEntity must be annoted by EsEntity() 
 
 ### Get the generated mappings
 
@@ -62,7 +65,7 @@ import { Client } from 'elasticsearch';
 const esClient = new Client();
 
 // Upload the mapping
-const mappings = EsMappingService.getInstance(esClient).uploadMappings();
+const mappings = EsMappingService.getInstance().uploadMappings(esClient);
 ```
 
 only none readonly entity will be uploaded

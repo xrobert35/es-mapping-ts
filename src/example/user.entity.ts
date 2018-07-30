@@ -31,8 +31,13 @@ export class UserEntity {
   dog: Budget;
 
   @EsField({
+    type: 'object',
+  })
+  history: Array<Budget>;
+
+  @EsField({
     type: 'nested',
-    nestedType : MasterEntity
+    fieldClass: MasterEntity
   })
   master: Array<MasterEntity>;
 }

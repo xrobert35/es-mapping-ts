@@ -64,11 +64,12 @@ export class EsMappingService {
 
     let properties: EsMappingProperty = {};
     if (args) {
-      if (args.type === 'nested') {
-        properties.type = 'nested';
-        properties.properties = this.esMappings.get(args.nestedType.name).esmapping.body.properties;
-      } else if (args.type === 'object') {
-        properties.properties = this.esMappings.get(propertyType.name).esmapping.body.properties;
+      if (args.type === 'nested' || args.type === 'object') {
+        properties.type = args.type;
+        const esEntity = this.esMappings.get(propertyType.name);
+        if (esEntity) {
+          properties.properties = esEntity.esmapping.body.properties;
+        }
       } else {
         properties = args;
       }

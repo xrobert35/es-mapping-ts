@@ -156,12 +156,11 @@ export class EsMappingService {
     await bluebird.each(mappings, async (internalMapping) => {
       if (!internalMapping.readonly) {
         const esMapping = internalMapping.esmapping;
-        const index = internalMapping.esmapping.index;
 
         // Delete readonly for ES compatibility
         delete internalMapping.readonly;
 
-        const indexExist = await esclient.indices.exists({ index: index });
+        const indexExist = await esclient.indices.exists({ index: esMapping.index });
         if (!indexExist) {
           //create index
           await esclient.indices.create({ index: esMapping.index });

@@ -11,10 +11,12 @@
     "dist": "gulp build"
   },
   "dependencies": {
+    "reflect-metadata": "^0.1.12"
+  },
+  "peerDependencies": {
     "bluebird": "^3.5.1",
     "elasticsearch": "^14.2.2",
-    "lodash": "^4.17.5",
-    "reflect-metadata": "^0.1.12"
+    "lodash": "^4.17.5"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.20",

@@ -158,18 +158,20 @@ export class EsMappingService {
       if (!internalMapping.readonly) {
         const esMapping = internalMapping.esmapping;
 
-        // Delete readonly for ES compatibility
-        delete internalMapping.readonly;
+        if (esMapping.index) {
+          // Delete readonly for ES compatibility
+          delete internalMapping.readonly;
 
-        const indexExist = await esclient.indices.exists({ index: esMapping.index });
-        if (!indexExist) {
-          //create index
-          await esclient.indices.create({ index: esMapping.index });
-          //create mapping
-          await esclient.indices.putMapping(esMapping);
-        } else {
-          //update mapping
-          await esclient.indices.putMapping(esMapping);
+          const indexExist = await esclient.indices.exists({ index: esMapping.index });
+          if (!indexExist) {
+            //create index
+            await esclient.indices.create({ index: esMapping.index });
+            //create mapping
+            await esclient.indices.putMapping(esMapping);
+          } else {
+            //update mapping
+            await esclient.indices.putMapping(esMapping);
+          }
         }
       }
     });

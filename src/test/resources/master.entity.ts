@@ -26,12 +26,6 @@ export class MasterEntity {
   lastname: string;
 
   @EsField({
-    type: 'join',
-    relations: { 'master': 'submaster' }
-  })
-  master: Array<MasterEntity>;
-
-  @EsField({
     type: 'object',
     fieldClass: ObjectEntity
   })

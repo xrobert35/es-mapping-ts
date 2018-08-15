@@ -40,7 +40,6 @@ describe('es-mapping-test', () => {
 
     expect(mapping.body.properties.firstname).toBeDefined();
     expect(mapping.body.properties.lastname).toBeDefined();
-    expect(mapping.body.properties.master).toBeDefined();
     expect(mapping.body.properties.objects).toBeDefined();
     expect(mapping.body.properties.objects.type).toEqual('object');
     expect(mapping.body.properties.objects.properties).toBeDefined();

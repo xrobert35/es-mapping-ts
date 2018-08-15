@@ -49,6 +49,26 @@ describe('es-mapping-test', () => {
     expect(mapping.body.properties.nesteds.properties).toBeDefined();
   });
 
+  it('should return mappings map', () => {
+    const mappings = EsMappingService.getInstance().getMappings();
+    expect(mappings.length).toEqual(3);
+  });
+
+  it('should return mapping indexes', () => {
+    const indexes = EsMappingService.getInstance().getAllIndex();
+    expect(indexes.length).toEqual(2);
+  });
+
+  it('should return es mappings', () => {
+    const esMappings = EsMappingService.getInstance().getEsMappings();
+    expect(esMappings.length).toEqual(3);
+  });
+
+  it('should return mappings', () => {
+    const mappings = EsMappingService.getInstance().getMappings();
+    expect(mappings.length).toEqual(3);
+  });
+
   it('should not load entity with non array nested field', () => {
     try {
       require('./resources/wrong-nested.entity');

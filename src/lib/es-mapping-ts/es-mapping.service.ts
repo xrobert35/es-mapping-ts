@@ -63,29 +63,22 @@ export class EsMappingService {
     }
 
     let properties: EsMappingProperty = {};
-    if (args) {
-      if (args.type === 'nested' || args.type === 'object') {
-        properties.type = args.type;
-        const esEntity = this.esMappings.get(propertyType.name);
-        if (esEntity) {
-          properties.properties = esEntity.esmapping.body.properties;
-        }
-      } else {
-        properties = args;
+    if (args.type === 'nested' || args.type === 'object') {
+      properties.type = args.type;
+      const esEntity = this.esMappings.get(propertyType.name);
+      if (esEntity) {
+        properties.properties = esEntity.esmapping.body.properties;
       }
-
-      const internalProperty: InternalEsMappingProperty = {
-        propertyMapping: properties
-      };
-
-      const propertyName = args.name || propertyKey;
-      mapping.addProperty(propertyName, internalProperty);
     } else {
-      const internalProperty: InternalEsMappingProperty = {
-        propertyMapping: {}
-      };
-      mapping.addProperty(propertyKey, internalProperty);
+      properties = args;
     }
+
+    const internalProperty: InternalEsMappingProperty = {
+      propertyMapping: properties
+    };
+
+    const propertyName = args.name || propertyKey;
+    mapping.addProperty(propertyName, internalProperty);
   }
 
   /**
@@ -158,7 +151,9 @@ export class EsMappingService {
    * Allow you to get all index
    */
   public getAllIndex(): Array<String> {
-    return lodash.map(Array.from(this.esMappings.values()), (mapping) => {
+    return lodash.map(lodash.filter(Array.from(this.esMappings.values()), (mapping) => {
+      return mapping.esmapping.index;
+    }), (mapping) => {
       return mapping.esmapping.index;
     });
   }

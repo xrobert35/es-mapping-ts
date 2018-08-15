@@ -5,10 +5,10 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "package": "npm run clean && tsc -p tsconfig.package.json",
-    "clean": "gulp clean",
     "build": "tsc -p tsconfig.json",
-    "dist": "gulp build"
+    "lint": "tslint --project tsconfig.json --fix",
+    "test": "node_modules/.bin/jest --colors --config=./jest.config.js --runInBand --coverage",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.12"
@@ -20,15 +20,23 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.20",
+    "@types/jest": "^21.1.8",
     "@types/lodash": "^4.14.105",
+    "@types/node": "^10.7.1",
+    "bluebird": "^3.5.1",
+    "coveralls": "^3.0.2",
     "cross-env": "^5.1.3",
+    "elasticsearch": "^14.2.2",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-typescript": "^3.2.3",
+    "jest": "^21.1.8",
     "mocha": "^5.0.1",
     "nyc": "^11.4.1",
+    "ts-jest": "^21.2.4",
     "ts-node": "^3.3.0",
+    "tslint": "5.3.2",
     "typescript": "^2.6.2"
   },
   "keywords": [
@@ -43,6 +51,19 @@
     "decorator",
     "generator"
   ],
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:xrobert35/es-mapping-ts.git"

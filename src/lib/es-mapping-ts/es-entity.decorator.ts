@@ -1,4 +1,4 @@
-import { EsMappingService } from "./es-mapping.service";
+import { EsMappingService } from './es-mapping.service';
 
 /**
  * Argument for an elasticsearch index
@@ -18,6 +18,9 @@ export class EsEntityArgs {
  */
 export function EsEntity(args?: EsEntityArgs): ClassDecorator {
   return function (target: any) {
+    if (args && !args.type) {
+      args.type = args.index;
+    }
     EsMappingService.getInstance().addEntity(args, target);
-  }
+  };
 }

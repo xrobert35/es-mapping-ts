@@ -1,6 +1,6 @@
-import { EsMapping, EsMappingProperty, InternalEsMapping, InternalEsMappingProperty } from "./es-mapping";
-import { EsFieldArgs } from "./es-field.decorator";
-import { EsEntityArgs } from "./es-entity.decorator";
+import { EsMapping, EsMappingProperty, InternalEsMapping, InternalEsMappingProperty } from './es-mapping';
+import { EsFieldArgs } from './es-field.decorator';
+import { EsEntityArgs } from './es-entity.decorator';
 import * as lodash from 'lodash';
 import * as bluebird from 'bluebird';
 import { Client } from 'elasticsearch';
@@ -21,7 +21,7 @@ export class EsMappingService {
    */
   static getInstance(): EsMappingService {
     if (!EsMappingService.instance) {
-      let esMappingService = new EsMappingService();
+      const esMappingService = new EsMappingService();
       EsMappingService.instance = esMappingService;
     }
     return EsMappingService.instance;
@@ -74,14 +74,14 @@ export class EsMappingService {
         properties = args;
       }
 
-      let internalProperty: InternalEsMappingProperty = {
+      const internalProperty: InternalEsMappingProperty = {
         propertyMapping: properties
       };
 
-      let propertyName = args.name || propertyKey;
+      const propertyName = args.name || propertyKey;
       mapping.addProperty(propertyName, internalProperty);
     } else {
-      let internalProperty: InternalEsMappingProperty = {
+      const internalProperty: InternalEsMappingProperty = {
         propertyMapping: {}
       };
       mapping.addProperty(propertyKey, internalProperty);
@@ -116,7 +116,12 @@ export class EsMappingService {
    * for a class name
    */
   public getMappingForClass(className: String): EsMapping {
-    return this.esMappings.get(className).esmapping;
+    const internalMapping = this.esMappings.get(className);
+
+    if (internalMapping) {
+      return internalMapping.esmapping;
+    }
+    return null;
   }
 
   /**
@@ -124,9 +129,14 @@ export class EsMappingService {
    * for an index name
    */
   public getMappingForIndex(indexName: String): EsMapping {
-    return lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
+    const internalMapping = lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
       return internalEsMapping.esmapping.index === indexName;
-    }).esmapping;
+    });
+
+    if (internalMapping) {
+      return internalMapping.esmapping;
+    }
+    return null;
   }
 
   /**
@@ -134,9 +144,14 @@ export class EsMappingService {
  * for an type
  */
   public getMappingForType(type: String): EsMapping {
-    return lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
+    const internalMapping = lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
       return internalEsMapping.esmapping.type === type;
-    }).esmapping;
+    });
+
+    if (internalMapping) {
+      return internalMapping.esmapping;
+    }
+    return null;
   }
 
   /**
@@ -159,18 +174,23 @@ export class EsMappingService {
         const esMapping = internalMapping.esmapping;
 
         if (esMapping.index) {
-          // Delete readonly for ES compatibility
-          delete internalMapping.readonly;
+          try {
+            // Delete readonly for ES compatibility
+            delete internalMapping.readonly;
 
-          const indexExist = await esclient.indices.exists({ index: esMapping.index });
-          if (!indexExist) {
-            //create index
-            await esclient.indices.create({ index: esMapping.index });
-            //create mapping
-            await esclient.indices.putMapping(esMapping);
-          } else {
-            //update mapping
-            await esclient.indices.putMapping(esMapping);
+            const indexExist = await esclient.indices.exists({ index: esMapping.index });
+            if (!indexExist) {
+              // create index
+              await esclient.indices.create({ index: esMapping.index });
+              // create mapping
+              await esclient.indices.putMapping(esMapping);
+            } else {
+              // update mapping
+              await esclient.indices.putMapping(esMapping);
+            }
+          } catch (err) {
+            console.error(`Something went wrong when trying to upload mapping for ${esMapping.index}`, err);
+            throw err;
           }
         }
       }

@@ -1,4 +1,6 @@
-# Es Mapping Ts
+# Es Mapping TS
+
+[![GitHub version](https://img.shields.io/badge/licence-MIT-green.svg)](https://github.com/xrobert35/univ-auth)
 
 #### This library is used to generate elasticsearch mapping through typescript decorator
 
@@ -12,54 +14,93 @@ npm install es-mapping-ts --save
 
 ### Create the mapping 
 ```typescript
-import { EsEntity, EsField } from "../lib/es-mapping-ts";
-import { BudgetEntity } from "./budget.entity";
-import { UsertEntity } from "./user.entity";
-import { MasterEntity } from "./master.entity";
+import { EsEntity, EsField } from 'es-mapping-ts';
+import { ObjectEntity } from './object.entity';
+import { NestedEntity } from './nested.entity';
 
 @EsEntity({
-  index: 'user',
-  type: 'user'
+  index: 'master',
+  type: 'masterType'
 })
-export class UserEntity {
+export class MasterEntity {
 
   @EsField({
-    type: "text",
+    type : 'text'
+  })
+  name?: string;
+
+  @EsField({
+    type: 'text',
+    copy_to : 'name'
+  })
+  firstname: string;
+
+  @EsField({
+    type: 'text',
+    copy_to : 'name'
+  })
+  lastname: string;
+
+  @EsField({
+    type: 'join',
+    relations: { 'master': 'submaster' }
+  })
+  master: Array<MasterEntity>;
+
+  @EsField({
+    type: 'object',
+    fieldClass: ObjectEntity
+  })
+  objects: Array<MasterEntity>;
+
+  @EsField({
+    type: 'nested',
+    fieldClass: NestedEntity
+  })
+  nesteds: Array<NestedEntity>;
+}
+```
+
+```typescript
+import { EsEntity, EsField } from 'es-mapping-ts';
+
+@EsEntity({
+  index: 'nested'
+})
+export class NestedEntity {
+
+  @EsField({
+    type: 'text',
+  })
+  name: string;
+
+  @EsField({
+    type: 'integer'
+  })
+  montant: number;
+}
+```
+
+```typescript
+import { EsEntity, EsField } from 'es-mapping-ts';
+
+// This es entity is only here for field mapping, 
+// it's not supposed to have is own index
+@EsEntity()
+export class ObjectEntity {
+
+  @EsField({
+    type: 'text',
     analyzer : 'whitespace'
   })
   name: string;
 
   @EsField({
-    type: "integer",
+    type: 'integer',
   })
   age: number;
-
-  @EsField({
-    type: 'join',
-    relations: { "parent" : "child"}
-  })
-  children: Array<UserEntity>;
-
-  @EsField({
-    type: 'object'
-  })
-  budget: BudgetEntity;
-
-  @EsField({
-    type: 'object',
-    fieldClass : BudgetEntity
-  })
-  budgets: Array<BudgetEntity>;
-
-  @EsField({
-    type: 'nested',
-    fieldClass : MasterEntity
-  })
-  master: Array<MasterEntity>;
 }
 ```
-
-* MasterEntity,  UserEntity and BudgetEntity must be annoted by EsEntity() 
 
 ### Get the generated mappings
 
@@ -68,14 +109,16 @@ export class UserEntity {
 import { EsMappingService } from 'es-mapping-ts';
 import { Client } from 'elasticsearch';
 
-const esClient = new Client();
+const esClient = new Client({
+  host: 'http://localhost:9200',
+  log : 'info'
+});
 
 // Upload the mapping
 const mappings = EsMappingService.getInstance().uploadMappings(esClient);
 ```
 
 only none readonly entity will be uploaded
-
 
 #### or do it yourself
 

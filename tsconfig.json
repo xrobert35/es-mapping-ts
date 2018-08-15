@@ -1,24 +1,33 @@
 {
   "compilerOptions": {
+    "target": "es5",
     "module": "commonjs",
-    "target": "es6",
-    "outDir": "build/",
     "lib": [
       "es6",
       "dom"
     ],
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
-    "sourceMap": false,
-    "emitDecoratorMetadata": true,
+    "noLib": false,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": false,
+    "moduleResolution": "node",
+    "types": ["node"],
     "experimentalDecorators": true,
-    "moduleResolution": "node"
+    "emitDecoratorMetadata": true
   },
-  "compileOnSave": false,
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "built",
+    "src/**/*.spec.ts"
+  ],
+  "include": [
+    "src/lib/es-mapping-ts/**/*.ts"
   ]
 }

@@ -10,7 +10,7 @@ export class EsFieldArgs {
   /** Name of the field : if it need to be different of the property name*/
   name?: string;
   /** Additional properties or not */
-  dynamic?: boolean;
+  dynamic?: string;
   /** Analyzer type */
   analyzer?: string;
   /** Additionnal ES fields **/

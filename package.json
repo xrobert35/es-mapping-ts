@@ -6,7 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "lint": "tslint --project tsconfig.json --fix",
+    "lint": "tslint --project tsconfig.json",
+    "lint:fix" : "tslint --project tsconfig.json --fix",
     "test": "node_modules/.bin/jest --colors --no-cache --config=./jest.config.js --runInBand --coverage",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },

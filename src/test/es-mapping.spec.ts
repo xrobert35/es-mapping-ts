@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import './resources/master.entity';
 import { EsMappingService } from '../lib/es-mapping-ts';
 import { Client } from 'elasticsearch';
-import { ObjectEntity } from "./resources/object.entity";
-import { ReadOnlyEntity } from "./resources/read-only.entity";
+import { ObjectEntity } from './resources/object.entity';
+import { ReadOnlyEntity } from './resources/read-only.entity';
 
 describe('es-mapping-test', () => {
 

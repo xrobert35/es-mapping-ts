@@ -24,7 +24,6 @@
   },
   "exclude": [
     "node_modules",
-    "built",
     "src/**/*.spec.ts"
   ],
   "include": [

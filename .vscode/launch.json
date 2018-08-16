@@ -5,26 +5,25 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch test",
       "type": "node",
       "request": "launch",
-      "name": "Launch Builded",
-      "program": "${workspaceFolder}/build/main.js"
-    },
-    {
-      "name": "Launch TS",
-      "type": "node",
-      "request": "launch",
-      "args": [
-        "${workspaceRoot}/src/main.ts"
-      ],
+      "env": {
+        "NODE_ENV": "test"
+      },
       "runtimeArgs": [
-        "-r",
-        "ts-node/register"
+        "--nolazy"
       ],
+      "args": [
+        "--colors",
+        "--config=${workspaceFolder}/jest.config.js",
+        "--runInBand"
+      ],
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      },
       "outputCapture": "std",
-      "cwd": "${workspaceRoot}",
-      "protocol": "inspector",
-      "internalConsoleOptions": "openOnSessionStart",
-    }
+      "internalConsoleOptions": "openOnSessionStart"
+    },
   ]
 }

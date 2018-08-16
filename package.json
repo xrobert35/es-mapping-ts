@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "tslint --project tsconfig.json --fix",
-    "test": "node_modules/.bin/jest --colors --config=./jest.config.js --runInBand --coverage",
+    "test": "node_modules/.bin/jest --colors --no-cache --config=./jest.config.js --runInBand --coverage",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
@@ -37,7 +37,8 @@
     "ts-jest": "^21.2.4",
     "ts-node": "^3.3.0",
     "tslint": "5.3.2",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "typescript-babel-jest": "^1.0.5"
   },
   "keywords": [
     "inversify",

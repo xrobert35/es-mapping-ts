@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import './resources/master.entity';
 import { EsMappingService } from '../lib/es-mapping-ts';
 import { Client } from 'elasticsearch';
+import { ObjectEntity } from "./resources/object.entity";
 
 describe('es-mapping-test', () => {
 
@@ -103,5 +104,18 @@ describe('es-mapping-test', () => {
     });
 
     await EsMappingService.getInstance().uploadMappings(client);
+  });
+
+  it('should rename keys if name is provided', () => {
+    const mapping = EsMappingService.getInstance().getMappingForClass(ObjectEntity.name);
+    const properties = Object.keys(mapping.body.properties);
+    expect(properties.includes('date_of_birth')).toBeTruthy();
+  });
+
+  it('should not add name to the es mapping', () => {
+    const mapping = EsMappingService.getInstance().getMappingForClass(ObjectEntity.name);
+    const dob = mapping.body.properties['date_of_birth'];
+    const fields = Object.keys(dob);
+    expect(fields.includes('name')).toBeFalsy();
   });
 });

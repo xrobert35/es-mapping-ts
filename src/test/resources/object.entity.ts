@@ -13,4 +13,10 @@ export class ObjectEntity {
     type: 'integer',
   })
   age: number;
+
+  @EsField({
+    name: 'date_of_birth',
+    type: 'text',
+  })
+  dateOfBirth: string;
 }

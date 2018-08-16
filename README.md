@@ -212,7 +212,7 @@ export class BaseMixin {
 | index | string | Allow you to define the index name |
 | type | string | Allow you to define the index type |
 | readonly | boolean | Define if the mapping must be uploaded when using uploadMappings function |
-| mixins | Array<any> | Allow you to compose with one or more EsEnity, see "Using mixins" |
+| mixins | Array<any> | Allow you to compose with one or more EsEntities, see "Using mixins" |
 
 ### @EsField
 

@@ -2,4 +2,4 @@ dist/*
 build/*
 node_modules/*
 npm/*
-coverrage/
+coverage/

@@ -1,4 +1,4 @@
-import { EsMappingService } from "./es-mapping.service";
+import { EsMappingService } from './es-mapping.service';
 import 'reflect-metadata';
 
 /**
@@ -26,7 +26,7 @@ export class EsFieldArgs {
   /** Relations for join datatype */
   relations?: any;
   /** Define class for "array/nested" type */
-  fieldClass?: any
+  fieldClass?: any;
   /** Additional properties */
   [x: string]: any;
 }
@@ -38,23 +38,24 @@ export class EsFieldArgs {
 export function EsField(args: EsFieldArgs): PropertyDecorator {
   return function (target: any, propertyKey: string | symbol) {
 
-    let propertyType = Reflect.getMetadata("design:type", target, propertyKey);
+    let propertyType = Reflect.getMetadata('design:type', target, propertyKey);
     if (args.type === 'join' && !args.relations) {
       throw new Error(`es-mapping-error no relations defined for join datatype : ${target.constructor.name}:${<string>propertyKey}`);
     }
 
     if (args.type === 'nested') {
-      if (propertyType.name !== 'Array') {
+      if (propertyType.name !== 'Array' && !propertyType.values) {
         throw new Error(`es-mapping-error type of a nested field must be an array : ${target.constructor.name}:${<string>propertyKey}`);
       }
       if (!args.fieldClass) {
-        console.warn(`es-mapping-warning no fieldClass defined for nested datatype : ${target.constructor.name}:${<string>propertyKey}`)
+        console.warn(`es-mapping-warning no fieldClass defined for nested datatype : ${target.constructor.name}:${<string>propertyKey}`);
       }
     }
 
     if (args.type === 'object' && !args.fieldClass) {
       if (propertyType.name === 'Array') {
-        console.warn(`es-mapping-warning no fieldClass defined for object array datatype : ${target.constructor.name}:${<string>propertyKey}`)
+        console.warn(`es-mapping-warning no fieldClass defined for object array datatype :
+        ${target.constructor.name}:${<string>propertyKey}`);
       }
     }
 

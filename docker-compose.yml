@@ -1,0 +1,17 @@
+version: "3.3"
+
+services:
+    # Before start : sudo sysctl -w vm.max_map_count=262144
+    # https://www.elastic.co/guide/en/elasticsearch/reference/5.0/vm-max-map-count.html#vm-max-map-count
+    # User : admin, MDP : adminadmin
+    es-mapping_es:
+        container_name: es-mapping_es
+        image: sebp/elk:latest
+        environment:
+            - ES_CONNECT_RETRY=100
+        ports:
+            - 5601:5601
+            - 9200:9200
+            - 9300:9300
+            - 5044:5044
+            - 5000:5000

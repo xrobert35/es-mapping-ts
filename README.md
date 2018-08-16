@@ -145,7 +145,7 @@ Bluebird.each(mappings, async (mapping) => {
 You can add mixins to your entities by declaring an entity like so:
 
 ```typescript
-@EsEntity({ mixins: [BaseMixin, DescriptionMixin] })
+@EsEntity({ mixins: [BaseMixin] })
 export class SomeEntity {
    @EsField({
         type: "text",
@@ -179,6 +179,7 @@ export class BaseMixin {
 ```
 
 `SomeClass` will now have a mapping like:
+
 ```json
 {
     "body": {

@@ -5,5 +5,8 @@ module.exports = {
   transform: {
     "^.+\\.(t|j)s$": "typescript-babel-jest"
   },
-  coverageDirectory: "../coverage"
+  coverageDirectory: "../coverage",
+  coveragePathIgnorePatterns: [
+    "src/test/resources"
+  ]
 }

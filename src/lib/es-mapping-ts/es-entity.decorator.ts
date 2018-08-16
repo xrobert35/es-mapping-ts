@@ -5,15 +5,17 @@ import { EsMappingService } from './es-mapping.service';
  */
 export class EsEntityArgs {
   /** Name of the index */
-  index: string;
+  index?: string;
   /** Type of the index */
   type?: string;
   /** create mapping or not **/
   readonly?: boolean;
+  /** add mixins **/
+  mixins?: any[];
 }
 
 /**
- * @EsEntity decorator : registrer the entity in the mapping through the EsMappingService
+ * @EsEntity decorator : register the entity in the mapping through the EsMappingService
  * @param args decorator annotation
  */
 export function EsEntity(args?: EsEntityArgs): ClassDecorator {

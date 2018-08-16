@@ -3,7 +3,8 @@
 [![GitHub version](https://img.shields.io/badge/licence-MIT-green.svg)](https://github.com/xrobert35/es-mapping-ts)
 [![Build Status](https://travis-ci.org/xrobert35/es-mapping-ts.svg?branch=master)](https://travis-ci.org/xrobert35/es-mapping-ts)
 [![Coverage Status](https://coveralls.io/repos/github/xrobert35/es-mapping-ts/badge.svg)](https://coveralls.io/github/xrobert35/es-mapping-ts)
-#### This library is used to generate elasticsearch mapping through typescript decorator
+
+This library is used to generate elasticsearch mapping through typescript decorators
 
 ## Installation
 
@@ -11,9 +12,10 @@
 npm install es-mapping-ts --save
 ```
 
-## Exemple
+## Examples
 
-### Create the mapping 
+### Create the mapping
+
 ```typescript
 import { EsEntity, EsField } from 'es-mapping-ts';
 import { ObjectEntity } from './object.entity';
@@ -58,7 +60,7 @@ export class MasterEntity {
     type: 'nested',
     fieldClass: NestedEntity
   })
-  nesteds: Array<NestedEntity>;
+  nested: Array<NestedEntity>;
 }
 ```
 
@@ -85,7 +87,7 @@ export class NestedEntity {
 ```typescript
 import { EsEntity, EsField } from 'es-mapping-ts';
 
-// This es entity is only here for field mapping, 
+// This es entity is only here for field mapping,
 // it's not supposed to have is own index
 @EsEntity()
 export class ObjectEntity {
@@ -106,6 +108,7 @@ export class ObjectEntity {
 ### Get the generated mappings
 
 #### Simply call the "uploadMappings"  function
+
 ```typescript
 import { EsMappingService } from 'es-mapping-ts';
 import { Client } from 'elasticsearch';
@@ -138,16 +141,80 @@ Bluebird.each(mappings, async (mapping) => {
 });
 ```
 
-## Decorator liste
+### Using mixins
+You can add mixins to your entities by declaring an entity like so:
 
-#### @EsEntity
+```typescript
+@EsEntity({ mixins: [BaseMixin] })
+export class SomeEntity {
+   @EsField({
+        type: "text",
+    })
+    name: string;
+}
+```
+
+The mixin class looks like:
+
+```typescript
+@EsEntity()
+export class BaseMixin {
+    @EsField({
+       type: "keyword"
+    })
+    id: string;
+
+    @EsField({
+        name: "start_date",
+        type: "date"
+    })
+    startDate: Date;
+
+    @EsField({
+        name: "end_date",
+        type: "date"
+    })
+    endDate: Date;
+}
+```
+
+`SomeClass` will now have a mapping like:
+
+```json
+{
+    "body": {
+        "properties": {
+            "name": {
+                "type": "text",
+            },
+            "id": {
+                "type": "keyword",
+            },
+            "start_date": {
+                "name": "start_date",
+                "type": "date",
+            },
+            "end_date": {
+                "name": "end_date",
+                "type": "date",
+            },
+        }
+    }
+}
+```
+
+## Decorators
+
+### @EsEntity
+
 | Param | Type |  Description |
 | ------ | ------ | ------ |
 | index | string | Allow you to define the index name |
 | type | string | Allow you to define the index type |
 | readonly | boolean | Define if the mapping must be uploaded when using uploadMappings function |
 
-#### @EsField
+### @EsField
+
 | Param | Type |  Description |
 | ------ | ------ | ------ |
 | type | string | Allow you to define the type of the index |
@@ -164,7 +231,8 @@ Bluebird.each(mappings, async (mapping) => {
 
 Additional properties are allowed, allowing you to manage other elasticsearch properties
 
-# License
+## License
+
 ----
 
 MIT

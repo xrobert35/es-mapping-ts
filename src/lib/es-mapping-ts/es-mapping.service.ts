@@ -39,10 +39,29 @@ export class EsMappingService {
       mapping = new InternalEsMapping();
       this.esMappings.set(className, mapping);
     }
+
     if (args) {
+
       mapping.esmapping.index = args.index;
-      mapping.esmapping.type = args.type;
-      mapping.readonly = (args.readonly === true);
+      mapping.esmapping.type = args.type as any;
+      mapping.readonly = args.readonly === true;
+
+      if (args.mixins) {
+        for (const mixin of args.mixins) {
+          const esEntity = this.esMappings.get(mixin.name);
+          if (esEntity) {
+            const properties = esEntity.esmapping.body.properties;
+
+            for (const propertyName of Object.keys(properties)) {
+              const internalProperty: InternalEsMappingProperty = {
+                propertyMapping: properties[propertyName]
+              };
+
+              mapping.addProperty(propertyName, internalProperty);
+            }
+          }
+        }
+      }
     }
     mapping.mergeEsMapping();
   }

@@ -41,16 +41,10 @@ export class EsMappingService {
     }
 
     if (args) {
-      if (args.index) {
-        mapping.esmapping.index = args.index;
-      }
-      if (args.type) {
-        mapping.esmapping.type = args.type as any;
-      }
 
-      if (args.readonly) {
-        mapping.readonly = args.readonly === true;
-      }
+      mapping.esmapping.index = args.index;
+      mapping.esmapping.type = args.type as any;
+      mapping.readonly = args.readonly === true;
 
       if (args.mixins) {
         for (const mixin of args.mixins) {

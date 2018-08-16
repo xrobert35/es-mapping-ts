@@ -1,4 +1,5 @@
 
+import { cloneDeep } from 'lodash';
 
 /**
  * Base format of an elasticsearch mapping
@@ -42,7 +43,7 @@ export class InternalEsMapping {
       return;
     }
 
-    const propertyMapping = JSON.parse(JSON.stringify(mapping.propertyMapping));
+    const propertyMapping = cloneDeep(mapping.propertyMapping);
 
     // remove the name field from the es-mapping
     delete propertyMapping.name

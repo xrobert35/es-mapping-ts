@@ -46,7 +46,7 @@ export class InternalEsMapping {
     const propertyMapping = cloneDeep(mapping.propertyMapping);
 
     // remove the name field from the es-mapping
-    delete propertyMapping.name
+    delete (propertyMapping as any).name;
 
     this.esmapping.body.properties[name] = propertyMapping;
   }

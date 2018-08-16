@@ -37,7 +37,17 @@ export class InternalEsMapping {
 
   addProperty(name: string | symbol, mapping: InternalEsMappingProperty): void {
     this.properties.set(name, mapping);
-    this.esmapping.body.properties[name] = mapping.propertyMapping;
+
+    if (!mapping.propertyMapping) {
+      return;
+    }
+
+    const propertyMapping = JSON.parse(JSON.stringify(mapping.propertyMapping));
+
+    // remove the name field from the es-mapping
+    delete propertyMapping.name
+
+    this.esmapping.body.properties[name] = propertyMapping;
   }
 }
 

@@ -53,9 +53,6 @@ describe('es-mapping-test', () => {
 
   it('should return mappings map', () => {
     const mappings = EsMappingService.getInstance().getMappings();
-
-    console.log(mappings);
-
     expect(mappings.length).toEqual(4);
   });
 
@@ -125,7 +122,7 @@ describe('es-mapping-test', () => {
 
   it('should create a read only entity', () => {
     const mapping = EsMappingService.getInstance().getMappingForClass(ReadOnlyEntity.name);
-    expect(mapping).toBeDefined()
+    expect(mapping).toBeDefined();
 
     const mappings = EsMappingService.getInstance().getMappings();
     const readonlyMappings = mappings.filter(m => m.readonly);

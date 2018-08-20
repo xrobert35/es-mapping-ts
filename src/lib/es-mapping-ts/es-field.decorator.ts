@@ -6,7 +6,7 @@ import 'reflect-metadata';
  */
 export class EsFieldArgs {
   /** Type of the field : "text" | "integer" | */
-  type: string;
+  type?: string;
   /** Name of the field : if it need to be different of the property name*/
   name?: string;
   /** Additional properties or not */
@@ -62,6 +62,8 @@ export function EsField(args: EsFieldArgs): PropertyDecorator {
     if (args.fieldClass) {
       propertyType = args.fieldClass;
     }
+
+    delete args.fieldClass;
 
     EsMappingService.getInstance().addField(args, target, propertyKey, propertyType);
   };

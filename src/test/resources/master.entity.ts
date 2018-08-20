@@ -9,7 +9,7 @@ import { NestedEntity } from './nested.entity';
 export class MasterEntity {
 
   @EsField({
-    type : 'text'
+    type: 'text'
   })
   name?: string;
 
@@ -26,6 +26,11 @@ export class MasterEntity {
   lastname: string;
 
   @EsField({
+    enabled: false
+  })
+  notIndexed: string;
+
+  @EsField({
     type: 'object',
     fieldClass: ObjectEntity
   })
@@ -33,7 +38,8 @@ export class MasterEntity {
 
   @EsField({
     type: 'nested',
-    fieldClass: NestedEntity
+    fieldClass: NestedEntity,
+    dynamic : 'strict',
   })
   nesteds: Array<NestedEntity>;
 }

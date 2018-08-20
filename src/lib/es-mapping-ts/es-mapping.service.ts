@@ -81,15 +81,13 @@ export class EsMappingService {
       mapping.mergeEsMapping();
     }
 
-    let properties: EsMappingProperty = {};
+    const properties: EsMappingProperty = args;
     if (args.type === 'nested' || args.type === 'object') {
       properties.type = args.type;
       const esEntity = this.esMappings.get(propertyType.name);
       if (esEntity) {
         properties.properties = esEntity.esmapping.body.properties;
       }
-    } else {
-      properties = args;
     }
 
     const internalProperty: InternalEsMappingProperty = {

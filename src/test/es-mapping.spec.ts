@@ -1,11 +1,10 @@
 import 'reflect-metadata';
 import './resources/master.entity';
 import { EsMappingService } from '../lib/es-mapping-ts';
-import { Client } from 'elasticsearch';
 import { ObjectEntity } from './resources/object.entity';
 import { ReadOnlyEntity } from './resources/read-only.entity';
 
-describe('es-mapping-test', () => {
+describe('es-mapping unit:test', () => {
 
   it('Mapping for type "masterType" should exist', () => {
     const mappings = EsMappingService.getInstance().getMappingForType('masterType');
@@ -39,15 +38,26 @@ describe('es-mapping-test', () => {
     expect(mapping.index).toEqual('master');
     expect(mapping.type).toEqual('masterType');
     expect(mapping.body.properties.name).toBeDefined();
+    expect(mapping.body.properties.name.type).toEqual('text');
 
     expect(mapping.body.properties.firstname).toBeDefined();
+    expect(mapping.body.properties.firstname.copy_to).toEqual('name');
+
+    expect(mapping.body.properties.notIndexed).toBeDefined();
+    expect(mapping.body.properties.notIndexed.enabled).toEqual(false);
+
     expect(mapping.body.properties.lastname).toBeDefined();
+    expect(mapping.body.properties.lastname.copy_to).toEqual('name');
+
     expect(mapping.body.properties.objects).toBeDefined();
     expect(mapping.body.properties.objects.type).toEqual('object');
     expect(mapping.body.properties.objects.properties).toBeDefined();
+    expect(mapping.body.properties.objects.fieldClass).not.toBeDefined();
 
     expect(mapping.body.properties.nesteds).toBeDefined();
     expect(mapping.body.properties.nesteds.type).toEqual('nested');
+    expect(mapping.body.properties.nesteds.dynamic).toEqual('strict');
+    expect(mapping.body.properties.nesteds.fieldClass).not.toBeDefined();
     expect(mapping.body.properties.nesteds.properties).toBeDefined();
   });
 
@@ -87,24 +97,6 @@ describe('es-mapping-test', () => {
       expect(err).toBeDefined();
       expect(err.message).toEqual('es-mapping-error no relations defined for join datatype : WrongRelationEntity:relations');
     }
-  });
-
-  it('should upload the mapping', async () => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
-
-    const mappings = EsMappingService.getInstance().getMappingForIndex('master');
-    expect(mappings).toBeDefined();
-
-    const client = new Client({
-      host: 'http://localhost:9200',
-      log : 'info'
-    });
-
-    await client.ping({
-      requestTimeout: 1000
-    });
-
-    await EsMappingService.getInstance().uploadMappings(client);
   });
 
   it('should rename keys if name is provided', () => {

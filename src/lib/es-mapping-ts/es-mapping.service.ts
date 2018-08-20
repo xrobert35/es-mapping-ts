@@ -84,6 +84,7 @@ export class EsMappingService {
     const properties: EsMappingProperty = args;
     if (args.type === 'nested' || args.type === 'object') {
       properties.type = args.type;
+      properties.dynamic = args.dynamic;
       const esEntity = this.esMappings.get(propertyType.name);
       if (esEntity) {
         properties.properties = esEntity.esmapping.body.properties;

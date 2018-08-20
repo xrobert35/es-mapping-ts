@@ -60,6 +60,7 @@ export interface EsMappingProperty {
   analyzer?: string;
   properties?: any;
   fields?: any;
+  dynamic?: string | boolean;
 }
 
 /**
@@ -67,14 +68,14 @@ export interface EsMappingProperty {
  */
 export interface InternalEsMappingProperty extends EsMappingProperty {
   propertyMapping: EsMappingProperty;
-  transformers?: EsMappingPropertyTranformer[];
+  transformers?: EsMappingPropertyTransformer[];
 }
 
-export interface EsMappingPropertyTranformer {
+export interface EsMappingPropertyTransformer {
   fieldName: string;
-  transformer: EsPropertyTranformer;
+  transformer: EsPropertyTransformer;
 }
 
-export interface EsPropertyTranformer {
+export interface EsPropertyTransformer {
   transform(input: any);
 }

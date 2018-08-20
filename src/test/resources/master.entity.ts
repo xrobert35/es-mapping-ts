@@ -26,7 +26,8 @@ export class MasterEntity {
   lastname: string;
 
   @EsField({
-    enabled: false
+    enabled: false,
+    name: 'customName'
   })
   notIndexed: string;
 

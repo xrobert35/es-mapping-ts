@@ -43,8 +43,10 @@ describe('es-mapping unit:test', () => {
     expect(mapping.body.properties.firstname).toBeDefined();
     expect(mapping.body.properties.firstname.copy_to).toEqual('name');
 
-    expect(mapping.body.properties.notIndexed).toBeDefined();
-    expect(mapping.body.properties.notIndexed.enabled).toEqual(false);
+    expect(mapping.body.properties.notIndexed).not.toBeDefined();
+    expect(mapping.body.properties.customName).toBeDefined();
+    expect(mapping.body.properties.customName.name).not.toBeDefined();
+    expect(mapping.body.properties.customName.enabled).toEqual(false);
 
     expect(mapping.body.properties.lastname).toBeDefined();
     expect(mapping.body.properties.lastname.copy_to).toEqual('name');

@@ -1,13 +1,13 @@
 {
   "name": "es-mapping-ts",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "ES Mapping TypeScript",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "tslint --project tsconfig.json",
-    "lint:fix" : "tslint --project tsconfig.json --fix",
+    "lint:fix": "tslint --project tsconfig.json --fix",
     "test": "node_modules/.bin/jest --colors --no-cache --config=./jest.it.config.js --runInBand --coverage",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },

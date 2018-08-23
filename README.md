@@ -142,6 +142,46 @@ Bluebird.each(mappings, async (mapping) => {
 });
 ```
 
+### Inheritance
+You can also extend EsMapping
+
+```typescript
+export class AbstractEntity {
+
+  @EsField({
+    type: 'text',
+  })
+  abstractName: string;
+
+  @EsField({
+    type: 'text',
+  })
+  overridableName: string;
+}
+```
+
+```typescript
+@EsEntity({
+  index: 'concret',
+  type: 'typeConcret'
+})
+export class ConcretEntity extends AbstractEntity {
+
+  @EsField({
+    type: 'text'
+  })
+  concretName: string;
+
+
+  @EsField({
+    type: 'text',
+    null_value : 'undefined'
+  })
+  overridableName: string;
+}
+```
+
+
 ### Using mixins
 You can add mixins to your entities by declaring an entity like so:
 

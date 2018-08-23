@@ -8,7 +8,7 @@
     "build": "tsc -p tsconfig.json",
     "lint": "tslint --project tsconfig.json",
     "lint:fix" : "tslint --project tsconfig.json --fix",
-    "test": "node_modules/.bin/jest --colors --no-cache --config=./jest.config.js --runInBand --coverage",
+    "test": "node_modules/.bin/jest --colors --no-cache --config=./jest.it.config.js --runInBand --coverage",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
@@ -42,16 +42,11 @@
     "typescript-babel-jest": "^1.0.5"
   },
   "keywords": [
-    "inversify",
-    "inversifyjs",
     "typescript",
     "elasticsearch",
     "mapping",
-    "expressjs",
-    "express",
     "documentation",
-    "decorator",
-    "generator"
+    "decorator"
   ],
   "jest": {
     "moduleFileExtensions": [

@@ -3,7 +3,7 @@ module.exports = {
   rootDir: "./src",
   testRegex: "src\/test.*spec.ts$",
   transform: {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": "typescript-babel-jest"
   },
   coverageDirectory: "../coverage",
   coveragePathIgnorePatterns: [

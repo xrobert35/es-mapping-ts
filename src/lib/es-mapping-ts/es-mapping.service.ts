@@ -32,7 +32,7 @@ export class EsMappingService {
    * @param args decorator args
    * @param target class
    */
-  addEntity(args: EsEntityArgs, target: any): void {
+  addEntity(args: EsEntityArgs, target: any, superClass: any): void {
     const className = target.name;
     let mapping = this.esMappings.get(className);
     if (!mapping) {
@@ -40,8 +40,34 @@ export class EsMappingService {
       this.esMappings.set(className, mapping);
     }
 
-    if (args) {
+    const mergeProperties = (properties) => {
+      for (const propertyName of Object.keys(properties)) {
+        const currentMappingProperty = mapping.properties.get(propertyName);
+        let internalProperty: InternalEsMappingProperty = null;
+        if (!currentMappingProperty) {
+          internalProperty = {
+            propertyMapping: properties[propertyName]
+          };
+        } else {
+          internalProperty = {
+            propertyMapping: {
+              ...properties[propertyName],
+              ...currentMappingProperty.propertyMapping
+            }
+          };
+        }
+        mapping.addProperty(propertyName, internalProperty);
+      }
+    };
 
+    if (superClass) {
+      const superClassMapping = this.esMappings.get(superClass);
+      if (superClassMapping) {
+        mergeProperties(superClassMapping.esmapping.body.properties);
+      }
+    }
+
+    if (args) {
       mapping.esmapping.index = args.index;
       mapping.esmapping.type = args.type as any;
       mapping.readonly = args.readonly === true;
@@ -50,19 +76,12 @@ export class EsMappingService {
         for (const mixin of args.mixins) {
           const esEntity = this.esMappings.get(mixin.name);
           if (esEntity) {
-            const properties = esEntity.esmapping.body.properties;
-
-            for (const propertyName of Object.keys(properties)) {
-              const internalProperty: InternalEsMappingProperty = {
-                propertyMapping: properties[propertyName]
-              };
-
-              mapping.addProperty(propertyName, internalProperty);
-            }
+            mergeProperties(esEntity.esmapping.body.properties);
           }
         }
       }
     }
+
     mapping.mergeEsMapping();
   }
 

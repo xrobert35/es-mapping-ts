@@ -23,6 +23,14 @@ export function EsEntity(args?: EsEntityArgs): ClassDecorator {
     if (args && !args.type) {
       args.type = args.index;
     }
-    EsMappingService.getInstance().addEntity(args, target);
+
+    // Extracting possible super class from prototype
+    const protoType = Object.getPrototypeOf(target).name;
+    let superClass = null;
+    if (protoType !== '') {
+      superClass = protoType;
+    }
+
+    EsMappingService.getInstance().addEntity(args, target, superClass);
   };
 }

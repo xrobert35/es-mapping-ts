@@ -3,19 +3,18 @@ import { AbstractEntity } from './abstract.entity';
 
 @EsEntity({
   index: 'concret',
-  type: 'typeConcret'
+  type: 'typeConcret',
 })
 export class ConcretEntity extends AbstractEntity {
 
   @EsField({
-    type: 'text'
+    type: 'text',
   })
-  concretName?: string;
-
+  concretName: string;
 
   @EsField({
     type: 'text',
-    null_value : 'undefined'
+    null_value : 'undefined',
   })
-  overridableName?: string;
+  overridableName: string;
 }

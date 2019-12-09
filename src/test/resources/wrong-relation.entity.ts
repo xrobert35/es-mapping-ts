@@ -4,7 +4,7 @@ import { EsEntity, EsField } from '../../lib/es-mapping-ts';
 export class WrongRelationEntity {
 
   @EsField({
-    type: 'join'
+    type: 'join',
   })
   relations: WrongRelationEntity;
 }

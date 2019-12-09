@@ -1,7 +1,7 @@
 # Es Mapping TS
 
 [![GitHub version](https://img.shields.io/badge/licence-MIT-green.svg)](https://github.com/xrobert35/es-mapping-ts)
-[![GitHub version](https://img.shields.io/badge/version-0.0.14-blue.svg)](https://github.com/xrobert35/es-mapping-ts)
+[![GitHub version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/xrobert35/es-mapping-ts)
 [![Build Status](https://travis-ci.org/xrobert35/es-mapping-ts.svg?branch=master)](https://travis-ci.org/xrobert35/es-mapping-ts)
 [![Coverage Status](https://coveralls.io/repos/github/xrobert35/es-mapping-ts/badge.svg)](https://coveralls.io/github/xrobert35/es-mapping-ts)
 
@@ -12,6 +12,18 @@ This library is used to generate elasticsearch mapping through typescript decora
 ```sh
 npm install es-mapping-ts --save
 ```
+
+## Peer dependencies 
+
+This package only work with **@elastic/elasticsearch**
+
+## Version
+
+### tested with
+
+* elasticsearch 7
+* elasticsearch 6  
+* elasticsearch 5 
 
 ## Examples
 

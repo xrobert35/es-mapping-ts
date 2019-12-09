@@ -1,8 +1,11 @@
 language: node_js
-services: elasticsearch
+env:
+  global:
+    - ES_VERSION=7.2.0
 node_js:
-  - "8"
+  - "12.4"
 before_install:
+  - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}-amd64.deb && sudo dpkg -i --force-confnew elasticsearch-${ES_VERSION}-amd64.deb && sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch && sudo service elasticsearch start
   - npm i -g npm@latest
   - npm i
 install:

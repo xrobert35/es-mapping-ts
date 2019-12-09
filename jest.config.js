@@ -1,12 +1,13 @@
 module.exports = {
-  moduleFileExtensions: ["js", "json", "ts"],
+  testEnvironment: "node",
+  moduleFileExtensions: ["js", "json", "ts", "node"],
   rootDir: "./src",
   testRegex: "src\/test.*spec.ts$",
   transform: {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.ts$": "ts-jest"
   },
   coverageDirectory: "../coverage",
   coveragePathIgnorePatterns: [
     "src/test/resources"
-  ]
+  ],
 }

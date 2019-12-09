@@ -5,7 +5,7 @@ import { NestedEntity } from './nested.entity';
 export class WrongNestedEntity {
 
   @EsField({
-    type: 'nested'
+    type: 'nested',
   })
   nesteds: NestedEntity;
 }

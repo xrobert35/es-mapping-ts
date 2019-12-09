@@ -17,11 +17,10 @@
       "args": [
         "--colors",
         "--config=${workspaceFolder}/jest.config.js",
-        "--runInBand"
+        "--runInBand",
+        "--coverage"
       ],
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      },
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       "outputCapture": "std",
       "internalConsoleOptions": "openOnSessionStart"
     },

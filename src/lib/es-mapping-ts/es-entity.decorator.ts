@@ -8,9 +8,9 @@ export class EsEntityArgs {
   index?: string;
   /** Type of the index */
   type?: string;
-  /** create mapping or not **/
+  /** create mapping or not */
   readonly?: boolean;
-  /** add mixins **/
+  /** add mixins */
   mixins?: any[];
 }
 
@@ -19,7 +19,7 @@ export class EsEntityArgs {
  * @param args decorator annotation
  */
 export function EsEntity(args?: EsEntityArgs): ClassDecorator {
-  return function (target: any) {
+  return (target: any) => {
     if (args && !args.type) {
       args.type = args.index;
     }

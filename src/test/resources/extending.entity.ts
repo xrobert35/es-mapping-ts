@@ -3,12 +3,12 @@ import { MasterEntity } from './master.entity';
 
 @EsEntity({
   index: 'extending',
-  type: 'typeExtending'
+  type: 'typeExtending',
 })
 export class ExtendingEntity extends MasterEntity {
 
   @EsField({
-    type: 'text'
+    type: 'text',
   })
   extendend?: string;
 

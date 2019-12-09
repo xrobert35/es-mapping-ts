@@ -5,7 +5,7 @@ export class ObjectEntity {
 
   @EsField({
     type: 'text',
-    analyzer : 'whitespace'
+    analyzer : 'whitespace',
   })
   name: string;
 

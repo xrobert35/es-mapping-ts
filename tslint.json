@@ -1,9 +1,12 @@
 {
+  "extends": ["tslint:recommended"],
   "rules": {
     "arrow-return-shorthand": true,
     "prefer-template": true,
     "callable-types": true,
     "class-name": true,
+    "max-classes-per-file" : false,
+    "interface-name": false,
     "comment-format": [
       true,
       "check-space"

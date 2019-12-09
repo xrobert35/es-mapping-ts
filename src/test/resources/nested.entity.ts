@@ -1,7 +1,7 @@
 import { EsEntity, EsField } from '../../lib/es-mapping-ts';
 
 @EsEntity({
-  index: 'nested'
+  index: 'nested',
 })
 export class NestedEntity {
 
@@ -11,7 +11,7 @@ export class NestedEntity {
   name: string;
 
   @EsField({
-    type: 'integer'
+    type: 'integer',
   })
   montant: number;
 }

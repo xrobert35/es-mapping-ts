@@ -1,13 +1,12 @@
 import 'reflect-metadata';
-import './resources/master.entity';
-import './resources/extending.entity';
-import './resources/concret.entity';
 import { EsMappingService } from '../lib/es-mapping-ts';
+import './resources/concret.entity';
+import './resources/extending.entity';
+import './resources/master.entity';
 import { ObjectEntity } from './resources/object.entity';
 import { ReadOnlyEntity } from './resources/read-only.entity';
 
 describe('es-mapping unit:test', () => {
-
 
   it('Mapping for type "masterType" should exist', () => {
     const mapping = EsMappingService.getInstance().getMappingForType('masterType');
@@ -83,6 +82,16 @@ describe('es-mapping unit:test', () => {
     expect(mappings).toBeDefined();
   });
 
+  it('Mapping for class unknow should not exist', () => {
+    const mapping = EsMappingService.getInstance().getMappingForClass('unknow');
+    expect(mapping).toBeNull();
+  });
+
+  it('Mapping for type unknow should not exist', () => {
+    const mapping = EsMappingService.getInstance().getMappingForType('unknow');
+    expect(mapping).toBeNull();
+  });
+
   it('Mapping for type "masterType" should exist', () => {
     const mapping = EsMappingService.getInstance().getMappingForIndex('master');
     expect(mapping).toBeDefined();
@@ -135,6 +144,11 @@ describe('es-mapping unit:test', () => {
     expect(mappings.length).toEqual(7);
   });
 
+  it('should return the mapping map', () => {
+    const mappingsMap = EsMappingService.getInstance().getMappingsMap();
+    expect(mappingsMap).toBeDefined();
+  });
+
   it('should not load entity with non array nested field', () => {
     try {
       require('./resources/wrong-nested.entity');
@@ -171,7 +185,7 @@ describe('es-mapping unit:test', () => {
     expect(mapping).toBeDefined();
 
     const mappings = EsMappingService.getInstance().getMappings();
-    const readonlyMappings = mappings.filter(m => m.readonly);
+    const readonlyMappings = mappings.filter((m) => m.readonly);
     expect(readonlyMappings).toHaveLength(1);
   });
 });

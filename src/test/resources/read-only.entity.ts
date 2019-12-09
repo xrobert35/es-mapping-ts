@@ -5,7 +5,7 @@ export class ReadOnlyEntity {
 
   @EsField({
     type: 'text',
-    analyzer : 'whitespace'
+    analyzer : 'whitespace',
   })
   status: string;
 }

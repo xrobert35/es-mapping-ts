@@ -1,9 +1,7 @@
-import { EsMapping, EsMappingProperty, InternalEsMapping, InternalEsMappingProperty } from './es-mapping';
-import { EsFieldArgs } from './es-field.decorator';
+import { Client } from '@elastic/elasticsearch';
 import { EsEntityArgs } from './es-entity.decorator';
-import * as lodash from 'lodash';
-import * as bluebird from 'bluebird';
-import { Client } from 'elasticsearch';
+import { EsFieldArgs } from './es-field.decorator';
+import { EsMapping, EsMappingProperty, InternalEsMapping, InternalEsMappingProperty } from './es-mapping';
 
 /**
  * Service used to manage mapping loading and share it
@@ -12,7 +10,7 @@ export class EsMappingService {
 
   static instance: EsMappingService;
 
-  esMappings: Map<String, InternalEsMapping> = new Map();
+  esMappings: Map<string, InternalEsMapping> = new Map();
 
   constructor() { }
 
@@ -34,11 +32,7 @@ export class EsMappingService {
    */
   addEntity(args: EsEntityArgs, target: any, superClass: any): void {
     const className = target.name;
-    let mapping = this.esMappings.get(className);
-    if (!mapping) {
-      mapping = new InternalEsMapping();
-      this.esMappings.set(className, mapping);
-    }
+    const mapping = this.esMappings.get(className);
 
     const mergeProperties = (properties) => {
       for (const propertyName of Object.keys(properties)) {
@@ -46,14 +40,14 @@ export class EsMappingService {
         let internalProperty: InternalEsMappingProperty = null;
         if (!currentMappingProperty) {
           internalProperty = {
-            propertyMapping: properties[propertyName]
+            propertyMapping: properties[propertyName],
           };
         } else {
           internalProperty = {
             propertyMapping: {
               ...properties[propertyName],
-              ...currentMappingProperty.propertyMapping
-            }
+              ...currentMappingProperty.propertyMapping,
+            },
           };
         }
         mapping.addProperty(propertyName, internalProperty);
@@ -81,8 +75,6 @@ export class EsMappingService {
         }
       }
     }
-
-    mapping.mergeEsMapping();
   }
 
   /**
@@ -97,7 +89,6 @@ export class EsMappingService {
     if (!mapping) {
       mapping = new InternalEsMapping();
       this.esMappings.set(className, mapping);
-      mapping.mergeEsMapping();
     }
 
     const properties: EsMappingProperty = args;
@@ -110,7 +101,7 @@ export class EsMappingService {
     }
 
     const internalProperty: InternalEsMappingProperty = {
-      propertyMapping: properties
+      propertyMapping: properties,
     };
 
     const propertyName = args.name || propertyKey;
@@ -120,17 +111,15 @@ export class EsMappingService {
   /**
    * Alllow you to get the generated mapping list ready to be inserted inside elasticsearch
    */
-  public getMappings(): Array<InternalEsMapping> {
+  public getMappings(): InternalEsMapping[] {
     return Array.from(this.esMappings.values());
   }
 
   /**
    * Allow you to get all index
    */
-  public getEsMappings(): Array<EsMapping> {
-    return lodash.map(Array.from(this.esMappings.values()), (mapping) => {
-      return mapping.esmapping;
-    });
+  public getEsMappings(): EsMapping[] {
+    return Array.from(this.esMappings.values()).map((mapping) => mapping.esmapping);
   }
 
   /**
@@ -144,7 +133,7 @@ export class EsMappingService {
    * Alllow you to get the generated mapping ready to be inserted inside elasticsearch
    * for a class name
    */
-  public getMappingForClass(className: String): EsMapping {
+  public getMappingForClass(className: string): EsMapping {
     const internalMapping = this.esMappings.get(className);
 
     if (internalMapping) {
@@ -157,10 +146,9 @@ export class EsMappingService {
    * Alllow you to get the generated mapping  ready to be inserted inside elasticsearch
    * for an index name
    */
-  public getMappingForIndex(indexName: String): EsMapping {
-    const internalMapping = lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
-      return internalEsMapping.esmapping.index === indexName;
-    });
+  public getMappingForIndex(indexName: string): EsMapping {
+    const internalMapping = Array.from(this.esMappings.values())
+      .find((internalEsMapping) => internalEsMapping.esmapping.index === indexName);
 
     if (internalMapping) {
       return internalMapping.esmapping;
@@ -169,13 +157,12 @@ export class EsMappingService {
   }
 
   /**
- * Alllow you to get the generated mapping  eady to be inserted inside elasticsearch
- * for an type
- */
-  public getMappingForType(type: String): EsMapping {
-    const internalMapping = lodash.find(Array.from(this.esMappings.values()), (internalEsMapping) => {
-      return internalEsMapping.esmapping.type === type;
-    });
+   * Alllow you to get the generated mapping  ready to be inserted inside elasticsearch
+   * for an type
+   */
+  public getMappingForType(type: string): EsMapping {
+    const internalMapping = Array.from(this.esMappings.values())
+      .find((internalEsMapping) => internalEsMapping.esmapping.type === type);
 
     if (internalMapping) {
       return internalMapping.esmapping;
@@ -186,12 +173,10 @@ export class EsMappingService {
   /**
    * Allow you to get all index
    */
-  public getAllIndex(): Array<String> {
-    return lodash.map(lodash.filter(Array.from(this.esMappings.values()), (mapping) => {
-      return mapping.esmapping.index;
-    }), (mapping) => {
-      return mapping.esmapping.index;
-    });
+  public getAllIndex(): string[] {
+    // load mapping with index
+    const mappings = Array.from(this.esMappings.values()).filter((mapping) => mapping.esmapping.index);
+    return mappings.map((mapping) => mapping.esmapping.index);
   }
 
   /**
@@ -200,31 +185,27 @@ export class EsMappingService {
   public async uploadMappings(esclient: Client) {
     const mappings = EsMappingService.getInstance().getMappings();
 
-    await bluebird.each(mappings, async (internalMapping) => {
+    await Promise.all(mappings.map(async (internalMapping) => {
       if (!internalMapping.readonly) {
         const esMapping = internalMapping.esmapping;
 
         if (esMapping.index) {
-          try {
-            // Delete readonly for ES compatibility
-            delete internalMapping.readonly;
+          esMapping.include_type_name = true;
+          // Delete readonly for ES compatibility
+          delete internalMapping.readonly;
 
-            const indexExist = await esclient.indices.exists({ index: esMapping.index });
-            if (!indexExist) {
-              // create index
-              await esclient.indices.create({ index: esMapping.index });
-              // create mapping
-              await esclient.indices.putMapping(esMapping);
-            } else {
-              // update mapping
-              await esclient.indices.putMapping(esMapping);
-            }
-          } catch (err) {
-            console.error(`Something went wrong when trying to upload mapping for ${esMapping.index}`, err);
-            throw err;
+          const indexExist = await esclient.indices.exists({ index: esMapping.index });
+          if (!indexExist.body) {
+            // create index
+            await esclient.indices.create({ index: esMapping.index });
+            // create mapping
+            await esclient.indices.putMapping(esMapping);
+          } else {
+            // update mapping
+            await esclient.indices.putMapping(esMapping);
           }
         }
       }
-    });
+    }));
   }
 }

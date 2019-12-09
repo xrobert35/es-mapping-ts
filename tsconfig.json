@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "lib": [
-      "es6",
+      "es2016",
       "dom"
     ],
     "declaration": true,
@@ -18,9 +18,15 @@
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": false,
     "moduleResolution": "node",
-    "types": ["node"],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "types": [
+      "node",  "jest"
+    ],
+    "typeRoots": [
+      "./src/types",
+      "node_modules/@types"
+    ],
   },
   "exclude": [
     "node_modules",

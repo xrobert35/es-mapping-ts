@@ -1,5 +1,5 @@
-import { EsMappingService } from './es-mapping.service';
 import 'reflect-metadata';
+import { EsMappingService } from './es-mapping.service';
 
 /**
  * Argument for a simple elasticsearch field
@@ -7,13 +7,13 @@ import 'reflect-metadata';
 export class EsFieldArgs {
   /** Type of the field : "text" | "integer" | */
   type?: string;
-  /** Name of the field : if it need to be different of the property name*/
+  /** Name of the field : if it need to be different of the property name */
   name?: string;
   /** Additional properties or not */
   dynamic?: string | boolean;
   /** Analyzer type */
   analyzer?: string;
-  /** Additionnal ES fields **/
+  /** Additionnal ES fields */
   fields?: any;
   /** Format */
   format?: any;
@@ -36,26 +36,26 @@ export class EsFieldArgs {
  * @param args decorator annotation
  */
 export function EsField(args: EsFieldArgs): PropertyDecorator {
-  return function (target: any, propertyKey: string | symbol) {
+  return (target: any, propertyKey: string | symbol) => {
 
     let propertyType = Reflect.getMetadata('design:type', target, propertyKey);
     if (args.type === 'join' && !args.relations) {
-      throw new Error(`es-mapping-error no relations defined for join datatype : ${target.constructor.name}:${<string>propertyKey}`);
+      throw new Error(`es-mapping-error no relations defined for join datatype : ${target.constructor.name}:${propertyKey as string}`);
     }
 
     if (args.type === 'nested') {
       if (propertyType.name !== 'Array' && !propertyType.values) {
-        throw new Error(`es-mapping-error type of a nested field must be an array : ${target.constructor.name}:${<string>propertyKey}`);
+        throw new Error(`es-mapping-error type of a nested field must be an array : ${target.constructor.name}:${propertyKey as string}`);
       }
       if (!args.fieldClass) {
-        console.warn(`es-mapping-warning no fieldClass defined for nested datatype : ${target.constructor.name}:${<string>propertyKey}`);
+        console.warn(`es-mapping-warning no fieldClass defined for nested datatype : ${target.constructor.name}:${propertyKey as string}`);
       }
     }
 
     if (args.type === 'object' && !args.fieldClass) {
       if (propertyType.name === 'Array') {
         console.warn(`es-mapping-warning no fieldClass defined for object array datatype :
-        ${target.constructor.name}:${<string>propertyKey}`);
+        ${target.constructor.name}:${propertyKey as string}`);
       }
     }
 

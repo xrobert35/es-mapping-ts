@@ -7,6 +7,7 @@ import { cloneDeep } from 'lodash';
 export class EsMapping {
   index: string;
   type: string;
+  include_type_name: boolean;
   body: { properties: any };
 
   constructor() {
@@ -21,27 +22,11 @@ export class InternalEsMapping {
   index: string;
   type: string;
   readonly: boolean;
-  esmapping: EsMapping;
+  esmapping: EsMapping = new EsMapping();
   properties: Map<string | symbol, InternalEsMappingProperty> = new Map();
-
-  constructor() {
-    this.esmapping = new EsMapping();
-  }
-
-  mergeEsMapping(): void {
-    if (!this.esmapping) {
-      this.esmapping = new EsMapping();
-    }
-    this.esmapping.index = this.esmapping.index;
-    this.esmapping.type = this.esmapping.type;
-  }
 
   addProperty(name: string | symbol, mapping: InternalEsMappingProperty): void {
     this.properties.set(name, mapping);
-
-    if (!mapping.propertyMapping) {
-      return;
-    }
 
     const propertyMapping = cloneDeep(mapping.propertyMapping);
 

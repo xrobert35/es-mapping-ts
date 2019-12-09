@@ -124,7 +124,7 @@ export class ObjectEntity {
 
 ```typescript
 import { EsMappingService } from 'es-mapping-ts';
-import { Client } from 'elasticsearch';
+import { Client } from '@elastic/elasticsearch';
 
 const esClient = new Client({
   host: 'http://localhost:9200',

@@ -3,6 +3,7 @@ import { EsMappingService } from '../lib/es-mapping-ts';
 import './resources/concret.entity';
 import './resources/extending.entity';
 import './resources/master.entity';
+import './resources/dynamic.entity';
 import { ObjectEntity } from './resources/object.entity';
 import { ReadOnlyEntity } from './resources/read-only.entity';
 
@@ -65,6 +66,30 @@ describe('es-mapping unit:test', () => {
 
     expect(mapping.body.properties.concretName).toBeDefined();
     expect(mapping.body.properties.concretName.type).toEqual('text');
+  });
+
+  it('Mapping for index "dynamic-strict" should exist', () => {
+    const mapping = EsMappingService.getInstance().getMappingForType('dynamicStrict');
+    expect(mapping).toBeDefined();
+
+    expect(mapping.index).toEqual('dynamic-strict');
+    expect(mapping.dynamic).toEqual('strict');
+  });
+
+  it('Mapping for index "dynamic-true" should exist', () => {
+    const mapping = EsMappingService.getInstance().getMappingForType('dynamicTrue');
+    expect(mapping).toBeDefined();
+
+    expect(mapping.index).toEqual('dynamic-true');
+    expect(mapping.dynamic).toBe(true);
+  });
+
+  it('Mapping for index "dynamic-false" should exist', () => {
+    const mapping = EsMappingService.getInstance().getMappingForType('dynamicFalse');
+    expect(mapping).toBeDefined();
+
+    expect(mapping.index).toEqual('dynamic-false');
+    expect(mapping.dynamic).toBe(false);
   });
 
   it('Mapping for index "nestedInd" should exist', () => {

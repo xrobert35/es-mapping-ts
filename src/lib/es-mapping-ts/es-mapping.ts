@@ -8,6 +8,7 @@ export class EsMapping {
   index: string;
   type: string;
   include_type_name: boolean;
+  dynamic: string | boolean;
   body: { properties: any };
 
   constructor() {

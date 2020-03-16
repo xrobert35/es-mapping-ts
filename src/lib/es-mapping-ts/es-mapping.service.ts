@@ -64,6 +64,7 @@ export class EsMappingService {
     if (args) {
       mapping.esmapping.index = args.index;
       mapping.esmapping.type = args.type as any;
+      mapping.esmapping.dynamic = args.dynamic;
       mapping.readonly = args.readonly === true;
 
       if (args.mixins) {

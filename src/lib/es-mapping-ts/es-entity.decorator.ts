@@ -10,6 +10,8 @@ export class EsEntityArgs {
   type?: string;
   /** create mapping or not */
   readonly?: boolean;
+  /** Additional properties or not */
+  dynamic?: string | boolean;
   /** add mixins */
   mixins?: any[];
 }

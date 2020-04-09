@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { EsMappingService } from '../lib/es-mapping-ts';
 import './resources/concret.entity';
+import './resources/dynamic.entity';
 import './resources/extending.entity';
 import './resources/master.entity';
-import './resources/dynamic.entity';
 import { ObjectEntity } from './resources/object.entity';
 import { ReadOnlyEntity } from './resources/read-only.entity';
 
@@ -151,22 +151,22 @@ describe('es-mapping unit:test', () => {
 
   it('should return mappings map', () => {
     const mappings = EsMappingService.getInstance().getMappings();
-    expect(mappings.length).toEqual(7);
+    expect(mappings.length).toEqual(10);
   });
 
   it('should return mapping indexes', () => {
     const indexes = EsMappingService.getInstance().getAllIndex();
-    expect(indexes.length).toEqual(4);
+    expect(indexes.length).toEqual(7);
   });
 
   it('should return es mappings', () => {
     const esMappings = EsMappingService.getInstance().getEsMappings();
-    expect(esMappings.length).toEqual(7);
+    expect(esMappings.length).toEqual(10);
   });
 
   it('should return mappings', () => {
     const mappings = EsMappingService.getInstance().getMappings();
-    expect(mappings.length).toEqual(7);
+    expect(mappings.length).toEqual(10);
   });
 
   it('should return the mapping map', () => {

@@ -37,7 +37,12 @@
     "ts-jest": "^24.2.0",
     "ts-node": "^3.3.0",
     "tslint": "5.3.2",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.3",
+    "kind-of": "^6.0.3",
+    "lodash": "^4.17.15",
+    "lodash.template": "^4.5.0",
+    "minimatch": "^3.0.4",
+    "minimist": "^1.2.5"
   },
   "keywords": [
     "typescript",

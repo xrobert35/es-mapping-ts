@@ -1,7 +1,7 @@
 # Es Mapping TS
 
 [![GitHub version](https://img.shields.io/badge/licence-MIT-green.svg)](https://github.com/xrobert35/es-mapping-ts)
-[![GitHub version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/xrobert35/es-mapping-ts)
+[![GitHub version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/xrobert35/es-mapping-ts)
 [![Build Status](https://travis-ci.org/xrobert35/es-mapping-ts.svg?branch=master)](https://travis-ci.org/xrobert35/es-mapping-ts)
 [![Coverage Status](https://coveralls.io/repos/github/xrobert35/es-mapping-ts/badge.svg?kill_cache=1)](https://coveralls.io/github/xrobert35/es-mapping-ts)
 
@@ -284,6 +284,36 @@ export class BaseMixin {
 | fieldClass | string | Class used to get the properties of the nested or object array type |
 
 Additional properties are allowed, allowing you to manage other elasticsearch properties
+
+## How to dev
+
+### test en build
+
+```shell
+# launch unit testing
+npm run test 
+
+# build
+npm run build
+```
+
+This project is also managed by travis for CI
+
+### release
+
+```
+npm run build
+npm run test
+
+mkdir release
+cp -r dist release
+cp LICENSE release
+cp README.md release
+cp package.json release #change version
+
+cd relese
+npm publish
+```
 
 ## License
 
